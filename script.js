@@ -143,30 +143,34 @@ function deleteAllData() {
   }
 
   if (confirm("Data အားလုံးဖျက်မှာ သေချာပါသလား?")) {
-    backupData();
+    
+          let data = {};
+
+
+
     Object.keys(localStorage).forEach((key) => {
+      data[key] = localStorage.getItem(key);
       if (
         key.startsWith("workerHistory_") ||
         key.startsWith("shopHistory_")
-        // key.startsWith("goldHistory_")
       ) {
         localStorage.removeItem(key);
+          let blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+          });
+
+          let a = document.createElement("a");
+
+          a.href = URL.createObjectURL(blob);
+
+          a.download = "keybell_backup.json";
+
+          a.click();
       }
     });
 
-    // localStorage.clear();
-    // ✅ Worker Data များဖျက်
-    // workers.forEach(worker => {
-    //     localStorage.removeItem("goldlists_" + worker.name);
-    //     localStorage.removeItem("workerHistory_" + worker.name);
-    //   });
     localStorage.removeItem("owngold");
 
-    // ✅ Shop Data များဖျက်
-    // shops.forEach(shop => {
-    //     localStorage.removeItem("shoplists_" + shop.name);
-    //     localStorage.removeItem("shopHistory_" + shop.name);
-    // });
     alert("ဖျက်ပြီးပါပြီ");
     location.reload();
   }
