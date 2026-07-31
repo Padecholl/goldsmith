@@ -104,7 +104,7 @@ body{
 }
 
 .second-nav div{
-        padding:0 5px;
+        padding: 5px;
         text-align: center;
         user-select: none;
     }
@@ -120,8 +120,6 @@ body{
 }
 
 .input-group-ctn{
-    width: 100%;
-    background-color: green;
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
@@ -131,7 +129,6 @@ body{
 
 /* ===== Card ===== */
 .input-group{
-    width: 30%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -153,7 +150,7 @@ body{
 
 /* Gram Input */
 #types,.input-group input{
-    width: 50%;
+    width: 90%;
     box-sizing: border-box;
     padding: 2px;
     margin-top: 8px;
@@ -172,16 +169,12 @@ body{
 /* Kyat Pae Yway */
 .kpy-div{
     display: flex;
-}
-
-.kpy-div div{
-    width: 30%;
-    background-color: red;
-}
-
-.kpy-div div > input{
-  text-align: center;
-  width: 90%;
+            div{
+               flex: 1;
+             }
+           input{
+             text-align: center;
+            }
 }
  
     input,button {
@@ -236,12 +229,22 @@ body{
         font-size:14px;
     }
 
+    button{
+        background-color: red;
+    }
+    
+
     .second-nav{
         font-size:14px;
     }
 
     .second-nav .icon{
         font-size:22px;
+    }
+
+    .input-group-ctn{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
     }
 
     .input-group{

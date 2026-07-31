@@ -443,8 +443,14 @@ const workerDetail = (index) => {
 
                     <div class="input-group">
                         <div>အပ်ရွှေ</div>
-                        <div>
-                            <input id="getGram" placeholder="Gram" oninput="fromGram('get')" />
+                        
+                        <div style="display:flex">
+                          <div>
+                              <input id="getGram" placeholder="Gram" oninput="fromGram('get')" />
+                          </div>
+                          <div>
+                              <input id="types" placeholder="အမျိုးအစား" />
+                          </div>
                         </div>
                         <div class="kpy-div" style="display:flex; align-items:center; justify-content:space-between;">
                         
@@ -458,9 +464,7 @@ const workerDetail = (index) => {
                                 <input id="getYway" placeholder="ရွေး" oninput="fromGold('get')" />
                             </div>
                         </div>
-                        <div>
-                            <input id="types" placeholder="အမျိုးအစား" />
-                        </div>
+                        
                     </div>
 
                     <div class="input-group">
@@ -480,9 +484,9 @@ const workerDetail = (index) => {
                                 <input id="factorYway" placeholder="ရွေး" oninput="fromGold('factor')" />
                             </div>
                         </div>
-                        <div>
-                                <button onclick="saveWorkersData(${index})">SAVE</button>
-                            </div>
+                    </div>
+                    <div style="height:100%">
+                        <button style="height:100px" onclick="saveWorkersData(${index})">SAVE</button>
                     </div>
             </div>
                         <table>
@@ -499,7 +503,6 @@ const workerDetail = (index) => {
 
                             <tbody id="mainTable_${index}"></tbody>
                         </table>
-                    <div id="allTable"></div>
     </div>
       `;
 
