@@ -170,13 +170,9 @@ body{
 
 /* Kyat Pae Yway */
 .kpy-div{
-    display: flex;
-            div{
-               flex: 1;
-             }
-           input{
-             text-align: center;
-            }
+    display:flex; 
+    align-items:center; 
+    justify-content:space-between;
 }
  
 input,button {
