@@ -1,0 +1,219 @@
+
+*{
+    padding: 0;
+    margin: 0;
+        /* box-sizing: border-box; */
+
+    
+}
+
+      body {
+        margin: 0;
+        font-family: "Myanmar Text", Arial;
+
+        background: #f5f5f5;
+      }
+.container{
+    width: 100%;
+}
+.nav-menu{
+        display: flex;
+        flex-direction: column;
+        padding: 5px;
+        list-style: none;
+
+        li{
+          user-select: none;
+          cursor: pointer;
+          padding: 10px 0;
+          border-bottom: 1px solid black;
+        }
+
+        li.active{
+            font-weight:bold;
+            color: red;
+        }
+
+        li:hover {
+         color: red;
+         font-weight:bold;
+      }
+    }
+
+.page{
+    position: relative;
+    /* padding: 5px; */
+    width: 100%;
+    display: none;
+}
+
+.page.active {
+        display: block;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+      }
+#setting{
+    button{
+        padding:10px;
+        margin: 10px;
+    }
+}
+
+
+
+#name_list,#shop_list,
+#name_h_div,#shop_h_div{
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.name-div,.his-shop-div,.his-name-div{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 5px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.08);
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    div{
+        padding:5px;
+        user-select: none;
+        cursor: pointer;
+    }
+    div:hover{
+        color: red;
+    }
+}
+
+.second-nav{
+    display: flex; 
+    justify-content: space-between;
+    width: 100%;
+    align-items: center;
+    background-color: rgb(221, 221, 221);
+    color: rgb(0, 0, 0);
+    border: 1px solid black;
+    div{
+        padding: 5px;
+        text-align: center;
+        user-select: none;
+    }
+    .icon{
+        font-size: 20px;
+        user-select: none;
+        cursor: pointer;
+    }
+}
+
+.input-group-ctn{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2px;
+    margin: 2px;
+}
+
+/* ===== Card ===== */
+.input-group{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 5px;
+    box-shadow: 0 3px 8px rgba(0,0,0,.08);
+}
+
+/* Title */
+.input-group > div:first-child{
+    font-size: 14px;
+    /* font-weight: bold; */
+    color: #000000;
+    /* margin-bottom: 2px; */
+    text-align: center;
+}
+
+/* Gram Input */
+#types,.input-group input{
+    width: 90%;
+    box-sizing: border-box;
+    padding: 2px;
+    margin-top: 8px;
+    border: 1px solid #322f2f;
+    border-radius: 8px;
+    font-size: 12px;
+    outline: none;
+    transition: .25s;
+}
+
+.input-group input:focus{
+    border-color: #2196F3;
+    box-shadow: 0 0 5px rgba(33,150,243,.3);
+}
+
+/* Kyat Pae Yway */
+.kpy-div{
+    display: flex;
+            div{
+               flex: 1;
+             }
+           input{
+             text-align: center;
+            }
+}
+ 
+    input,button {
+        padding: 5px;
+        margin: 5px;
+      }
+      button {
+        cursor: pointer;
+      }
+      table {
+        width: 100%;
+        /* border-collapse: collapse; */
+        padding: 5px;
+        margin-top: 5px;
+      }
+      th,td {
+        border: 1px solid #999;
+        padding: 2px;
+        text-align: center;
+      }
+      th {
+        background: #ddd;
+      }
+
+#mainHShopTable,#mainHWorkerTable{
+      width: 100%;
+}
+.inactive{
+    display: none;
+}
+
+.second-nav.inactive,
+.his-name-div.inactive,
+.h-w-table.inactive,
+.h-s-table.inactive{
+    display:none;
+}
+
+#name_list.inactive,
+#shop_list.inactive{
+    display: none;
+}
+
+#name_h_div.inactive,
+#shop_h_div.inactive{
+    display: none;
+}
+
+
+      
