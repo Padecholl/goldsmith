@@ -124,7 +124,7 @@ body{
 .input-group-ctn{
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center;
     gap: 2px;
     margin: 2px;
 }
@@ -179,25 +179,25 @@ body{
             }
 }
  
-    input,button {
+input,button {
         padding: 5px;
         margin: 5px;
       }
-      button {
+button {
         cursor: pointer;
       }
-      table {
+table {
         width: 100%;
         border-collapse: collapse;
         padding: 5px;
         margin-top: 5px;
       }
-      th,td {
+th,td {
         border: 1px solid #999;
         padding: 2px;
         text-align: center;
       }
-      th {
+th {
         background: #ddd;
       }
 
@@ -230,11 +230,6 @@ body{
     body{
         font-size:14px;
     }
-
-    button{
-        background-color: red;
-    }
-    
 
     .second-nav{
         font-size:12px;

@@ -485,8 +485,8 @@ const workerDetail = (index) => {
                             </div>
                         </div>
                     </div>
-                    <div style="height:100%">
-                        <button style="height:100px" onclick="saveWorkersData(${index})">SAVE</button>
+                    <div>
+                        <button onclick="saveWorkersData(${index})">SAVE</button>
                     </div>
             </div>
                         <table>
