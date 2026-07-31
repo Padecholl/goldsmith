@@ -248,23 +248,23 @@ body{
         display: none;
     }
 
-    .input-group-ctn{
+    /* .input-group-ctn{
         display: grid;
-        /* grid-template-columns: 1fr 1fr; */
-    }
+        grid-template-columns: 1fr 1fr;
+    } */
 
     .input-group{
-        width:50%;
+        width:100%;
     }
 
     .input-group input,
     #types{
-        font-size:14px;
+        font-size:8px;
     }
 
     .kpy-div{
         display:flex;
-        gap:4px;
+        gap:2px;
     }
 
     .kpy-div input{
