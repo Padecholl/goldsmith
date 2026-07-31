@@ -428,7 +428,7 @@ const workerDetail = (index) => {
                         <div>
                             <input id="giveGram" placeholder="Gram" oninput="fromGram('give')" />
                         </div>
-                        <div class="kpy-div" style="display:flex;align-items:center; justify-content:space-between;">
+                        <div class="kpy-div">
                             <div>
                                 <input id="giveKyat" placeholder="ကျပ်" oninput="fromGold('give')" />
                             </div>
@@ -452,7 +452,7 @@ const workerDetail = (index) => {
                               <input id="types" placeholder="အမျိုးအစား" />
                           </div>
                         </div>
-                        <div class="kpy-div" style="display:flex; align-items:center; justify-content:space-between;">
+                        <div class="kpy-div">
                         
                             <div>
                                 <input id="getKyat" placeholder="ကျပ်" oninput="fromGold('get')" />
@@ -472,7 +472,7 @@ const workerDetail = (index) => {
                         <div>
                             <input id="factorGram" placeholder="Gram" oninput="fromGram('factor')" />
                         </div>
-                        <div class="kpy-div" style="display:flex;align-items:center; justify-content:space-between;">
+                        <div class="kpy-div">
 
                             <div>
                                 <input id="factorKyat" placeholder="ကျပ်" oninput="fromGold('factor')" />
@@ -510,49 +510,138 @@ const workerDetail = (index) => {
   showWorker(index);
 };
 
+// function showWorker(index) {
+//   let html = "";
+//   let goldData =
+//     JSON.parse(localStorage.getItem("goldlists_" + workers[index].name)) || [];
+
+//   let balance = 0; // Running Balance
+
+//   goldData.forEach((x, i) => {
+//     balance += Number(x.get || 0);
+//     balance -= Number(x.give || 0);
+
+//     html += `
+//         <tr>
+//             <td><input type="checkbox"
+//                 ${x.checked ? "checked" : ""}
+//                 onchange="wtoggleCheck(${index}, ${i})"></td>
+
+//             <td>${formatDate(x.date)}</td>
+
+//             <td>${x.give ? goldText(x.give) : "-"}</td>
+//             <td>${x.get ? goldText(x.get) : "-"}</td>
+//             <td>${x.types}</td>
+//             <td>${x.factor ? goldText(x.factor) : "-"}</td>
+//             <!-- လက်ကျန်ရွှေ -->
+//             <td>${goldText(balance)}</td>
+
+//             <td>
+//                 ${
+//                   x.checked
+//                     ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
+//                     : `
+//                         <button onclick="editData(${index}, ${i})">✏️</button>
+//                         <button onclick="deleteData(${index}, ${i})">🗑️</button>
+//                     `
+//                 }
+//             </td>
+//         </tr>
+//         `;
+//   });
+
+//   let g = 0,
+//     t = 0,
+//     f = 0;
+
+//   goldData.forEach((x) => {
+//     g += Number(x.give || 0);
+//     t += Number(x.get || 0);
+//     f += Number(x.factor || 0);
+//   });
+
+//   html += `
+//     <tr style="font-weight:bold;background:#ffeeba"">
+//         <td colspan="2">စုစုပေါင်း</td>
+//         <td>${goldText(g)}</td>
+//         <td>${goldText(t)}</td>
+//         <td>-</td>
+//         <td>${goldText(f)}</td>
+//         <td>${goldText(balance)}</td>
+
+//         <td><button style="font-size:10px" onclick="closeWorkerList(${index})">
+//       စာရင်းပိတ်
+//     </button></td>
+//     </tr>
+//     `;
+
+//   document.getElementById("mainTable_" + index).innerHTML = html;
+// }
+
 function showWorker(index) {
+
   let html = "";
   let goldData =
     JSON.parse(localStorage.getItem("goldlists_" + workers[index].name)) || [];
 
-  let balance = 0; // Running Balance
+  // 📱 Mobile = gram, 💻 Desktop = goldText
+  const isMobile = window.innerWidth < 768;
+
+  function displayGold(value) {
+    value = Number(value || 0);
+
+    if (value === 0) return " ";
+
+    return isMobile
+      ? value.toFixed(2) + " g"
+      : goldText(value);
+  }
+
+  let balance = 0;
 
   goldData.forEach((x, i) => {
+
     balance += Number(x.get || 0);
     balance -= Number(x.give || 0);
 
     html += `
-        <tr>
-            <td><input type="checkbox"
-                ${x.checked ? "checked" : ""}
-                onchange="wtoggleCheck(${index}, ${i})"></td>
+      <tr>
 
-            <td>${formatDate(x.date)}</td>
+        <td>
+          <input type="checkbox"
+            ${x.checked ? "checked" : ""}
+            onchange="wtoggleCheck(${index}, ${i})">
+        </td>
 
-            <td>${x.give ? goldText(x.give) : "-"}</td>
-            <td>${x.get ? goldText(x.get) : "-"}</td>
-            <td>${x.types}</td>
-            <td>${x.factor ? goldText(x.factor) : "-"}</td>
-            <!-- လက်ကျန်ရွှေ -->
-            <td>${goldText(balance)}</td>
+        <td>${formatDate(x.date)}</td>
 
-            <td>
-                ${
-                  x.checked
-                    ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
-                    : `
-                        <button onclick="editData(${index}, ${i})">✏️</button>
-                        <button onclick="deleteData(${index}, ${i})">🗑️</button>
-                    `
-                }
-            </td>
-        </tr>
-        `;
+        <td>${displayGold(x.give)}</td>
+        <td>${displayGold(x.get)}</td>
+
+        <td>${x.types}</td>
+
+        <td>${displayGold(x.factor)}</td>
+
+        <td>${displayGold(balance)}</td>
+
+        <td>
+          ${
+            x.checked
+              ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
+              : `
+                <button onclick="editData(${index}, ${i})">✏️</button>
+                <button onclick="deleteData(${index}, ${i})">🗑️</button>
+              `
+          }
+        </td>
+
+      </tr>
+    `;
   });
 
-  let g = 0,
-    t = 0,
-    f = 0;
+  let g = 0;
+  let t = 0;
+  let f = 0;
 
   goldData.forEach((x) => {
     g += Number(x.give || 0);
@@ -561,19 +650,28 @@ function showWorker(index) {
   });
 
   html += `
-    <tr style="font-weight:bold;background:#ffeeba"">
-        <td colspan="2">စုစုပေါင်း</td>
-        <td>${goldText(g)}</td>
-        <td>${goldText(t)}</td>
-        <td>-</td>
-        <td>${goldText(f)}</td>
-        <td>${goldText(balance)}</td>
+    <tr style="font-weight:bold;background:#ffeeba">
 
-        <td><button style="font-size:10px" onclick="closeWorkerList(${index})">
-      စာရင်းပိတ်
-    </button></td>
+      <td colspan="2">စုစုပေါင်း</td>
+
+      <td>${displayGold(g)}</td>
+      <td>${displayGold(t)}</td>
+
+      <td> </td>
+
+      <td>${displayGold(f)}</td>
+
+      <td>${displayGold(balance)}</td>
+
+      <td>
+        <button style="font-size:10px"
+          onclick="closeWorkerList(${index})">
+          စာရင်းပိတ်
+        </button>
+      </td>
+
     </tr>
-    `;
+  `;
 
   document.getElementById("mainTable_" + index).innerHTML = html;
 }
