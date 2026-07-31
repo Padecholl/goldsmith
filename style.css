@@ -243,18 +243,13 @@ th {
         display: none;
     }
 
-    /* .input-group-ctn{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-    } */
-
     .input-group{
         width:100%;
     }
 
     .input-group input,
     #types{
-        font-size:8px;
+        font-size:14px;
     }
 
     .kpy-div{
