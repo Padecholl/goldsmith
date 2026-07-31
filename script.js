@@ -1,3 +1,5 @@
+
+
 function openPage(id, menu) {
   document.querySelector('.navbar').classList.add('inactive')
   // Hide all pages
@@ -61,50 +63,112 @@ function backupData() {
   a.click();
 }
 
+
 function restoreData() {
   let input = document.createElement("input");
 
   input.type = "file";
-
   input.accept = ".json";
+  input.multiple = true; // ✅ File အများကြီးရွေးနိုင်
 
   input.onchange = (e) => {
-    let file = e.target.files[0];
+        localStorage.clear();
 
-    let reader = new FileReader();
+    let files = e.target.files;
 
-    reader.onload = function () {
-      let data = JSON.parse(reader.result);
+    if (files.length === 0) return;
 
-      Object.keys(data).forEach((key) => {
-        localStorage.setItem(key, data[key]);
-      });
+    let completed = 0;
 
-      alert("Restore ပြီးပါပြီ");
-    };
+    for (let file of files) {
+      let reader = new FileReader();
 
-    reader.readAsText(file);
+      reader.onload = function () {
+        try {
+          let data = JSON.parse(reader.result);
+
+          Object.keys(data).forEach((key) => {
+            localStorage.setItem(key, data[key]);
+          });
+
+          completed++;
+
+          if (completed === files.length) {
+            alert(files.length + " ခုသော Backup File များ Restore ပြီးပါပြီ");
+            location.reload();
+          }
+
+        } catch (err) {
+          alert(file.name + " သည် JSON File မမှန်ပါ။");
+        }
+      };
+
+      reader.readAsText(file);
+    }
   };
 
   input.click();
 }
 
 function deleteAllData() {
-  let pass = prompt("Password");
 
-  if (pass !== localStorage.getItem("password")) {
-    alert("Password မှားပါတယ်");
+    // ✅ Workers စစ်
+    for (let worker of workers) {
+        let key = "goldlists_" + worker.name;
+        let goldData = JSON.parse(localStorage.getItem(key)) || [];
 
-    return;
-  }
+        if (goldData.length > 0) {
+            alert(worker.name + " မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။");
+            return;
+        }
+    }
 
-  if (confirm("Data အားလုံးဖျက်မလား?")) {
-    localStorage.clear();
+    // ✅ Shops စစ်
+    for (let shop of shops) {
+        let key = "goldlists_" + shop.name;
+        let shopData = JSON.parse(localStorage.getItem(key)) || [];
 
-    alert("ဖျက်ပြီးပါပြီ");
+        if (shopData.length > 0) {
+            alert(shop.name + " ဆိုင်မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။");
+            return;
+        }
+    }
 
-    location.reload();
-  }
+    let pass = prompt("Password");
+
+    if (pass !== localStorage.getItem("password")) {
+        alert("Password မှားပါတယ်");
+        return;
+    }
+
+    if (confirm("Data အားလုံးဖျက်မှာ သေချာပါသလား?")) {
+        backupData()
+Object.keys(localStorage).forEach(key => {
+    if (
+        key.startsWith("workerHistory_") ||
+        key.startsWith("shopHistory_") 
+        // key.startsWith("goldHistory_")
+    ) {
+        localStorage.removeItem(key);
+    }
+});
+
+        // localStorage.clear();
+            // ✅ Worker Data များဖျက်
+    // workers.forEach(worker => {
+    //     localStorage.removeItem("goldlists_" + worker.name);
+    //     localStorage.removeItem("workerHistory_" + worker.name);
+    //   });
+      localStorage.removeItem("owngold");
+
+    // ✅ Shop Data များဖျက်
+    // shops.forEach(shop => {
+    //     localStorage.removeItem("shoplists_" + shop.name);
+    //     localStorage.removeItem("shopHistory_" + shop.name);
+    // });
+        alert("ဖျက်ပြီးပါပြီ");
+        location.reload();
+    }
 }
 
 let workers = JSON.parse(localStorage.getItem("workers")) || [];
@@ -526,6 +590,7 @@ function wtoggleCheck(workerIndex, itemIndex) {
 }
 
 function editData(workerIndex, itemIndex) {
+  // document.querySelector(".box").classList.remove("inactive")
 
   editIndex = itemIndex;
   let goldData =
@@ -559,6 +624,7 @@ function deleteData(workerIndex, itemIndex) {
   }
 }
 
+
 function closeWorkerList(index) {
   let worker = workers[index].name;
   let key = "goldlists_" + worker;
@@ -566,6 +632,14 @@ function closeWorkerList(index) {
 
   if (goldData.length == 0) {
     alert("စာရင်းမရှိပါ");
+    return;
+  }
+
+  // ✅ Check အားလုံး true ဖြစ်ရမည်
+  let allChecked = goldData.every(item => item.checked === true);
+
+  if (!allChecked) {
+    alert("စာရင်းမပိတ်နိုင်သေးပါ!\nRecord အားလုံးကို ✓ Check လုပ်ပြီးမှ ပိတ်နိုင်ပါသည်။");
     return;
   }
 
@@ -587,7 +661,7 @@ function closeWorkerList(index) {
     ":" +
     String(now.getSeconds()).padStart(2, "0");
 
-  // 🔥 Start Date / End Date (from details)
+  // 🔥 Start Date / End Date
   let dates = goldData
     .map((x) => x.date)
     .filter(Boolean)
@@ -607,14 +681,11 @@ function closeWorkerList(index) {
   });
 
   let historyKey = "workerHistory_" + worker;
-
   let history = JSON.parse(localStorage.getItem(historyKey)) || [];
 
   history.push({
     worker: worker,
     closeDate: closeDate,
-
-    // ⭐ NEW FIELDS
     startDate: startDate,
     endDate: endDate,
     totalGive: totalGive,
@@ -626,7 +697,7 @@ function closeWorkerList(index) {
 
   localStorage.setItem(historyKey, JSON.stringify(history));
 
-  // clear current list
+  // Clear current list
   localStorage.setItem(key, JSON.stringify([]));
 
   alert("စာရင်းပိတ်ပြီး History ထဲသိမ်းပြီးပါပြီ");
@@ -641,11 +712,10 @@ function saveShopData(index) {
   }
 
   if (
-    document.getElementById("giveGram").value == "" &&
-    document.getElementById("getGram").value == "" &&
-    document.getElementById("ownGram").value == ""
+    document.getElementById("sgiveGram").value == "" &&
+    document.getElementById("sgetGram").value == ""
   ) {
-    alert("ပေးရွှေ(သို့)အပ်ရွှေ(သို့)စိုက်ရွှေ ထည့်ပါ");
+    alert("ပေးရွှေ(သို့)အပ်ရွှေ ထည့်ပါ");
     return;
   }
 
@@ -655,8 +725,8 @@ function saveShopData(index) {
   let obj = {
     shop: shops[index].name,
     date: dateInput,
-    give: Number(document.getElementById("giveGram").value) || 0,
-    get: Number(document.getElementById("getGram").value) || 0,
+    give: Number(document.getElementById("sgiveGram").value) || 0,
+    get: Number(document.getElementById("sgetGram").value) || 0,
     getfactor: Number(document.getElementById("getfactorGram").value) || 0,
     givefactor: Number(document.getElementById("givefactorGram").value) || 0,
     checked: false,
@@ -710,18 +780,18 @@ const shopDetail = (index) => {
                         <div>လက်ခံရွှေ</div>
 
                         <div>
-                            <input id="getGram" placeholder="Gram" oninput="fromGram('get')" />
+                            <input id="sgetGram" placeholder="Gram" oninput="fromGram('sget')" />
                         </div>
                         <div class="kpy-div" style="display:flex; align-items:center; justify-content:space-between;">
                         
                             <div>
-                                <input id="getKyat" placeholder="ကျပ်" oninput="fromGold('get')" />
+                                <input id="sgetKyat" placeholder="ကျပ်" oninput="fromGold('sget')" />
                             </div>
                             <div>
-                                <input id="getPae" placeholder="ပဲ" oninput="fromGold('get')" />
+                                <input id="sgetPae" placeholder="ပဲ" oninput="fromGold('sget')" />
                             </div>
                             <div>
-                                <input id="getYway" placeholder="ရွေး" oninput="fromGold('get')" />
+                                <input id="sgetYway" placeholder="ရွေး" oninput="fromGold('sget')" />
                             </div>
                         </div>
 
@@ -731,17 +801,17 @@ const shopDetail = (index) => {
                         <div>ပြန်အပ်ရွှေ</div>
 
                         <div>
-                            <input id="giveGram" placeholder="Gram" oninput="fromGram('give')" />
+                            <input id="sgiveGram" placeholder="Gram" oninput="fromGram('sgive')" />
                         </div>
                         <div class="kpy-div" style="display:flex;align-items:center; justify-content:space-between;">
                             <div>
-                                <input id="giveKyat" placeholder="ကျပ်" oninput="fromGold('give')" />
+                                <input id="sgiveKyat" placeholder="ကျပ်" oninput="fromGold('sgive')" />
                             </div>
                             <div>
-                                <input id="givePae" placeholder="ပဲ" oninput="fromGold('give')" />
+                                <input id="sgivePae" placeholder="ပဲ" oninput="fromGold('sgive')" />
                             </div>
                             <div>
-                                <input id="giveYway" placeholder="ရွေး" oninput="fromGold('give')" />
+                                <input id="sgiveYway" placeholder="ရွေး" oninput="fromGold('sgive')" />
                             </div>
                         </div>
                     </div>
@@ -904,7 +974,7 @@ function toggleCheck(shopIndex, itemIndex) {
 }
 
 function editShopData(workerIndex, itemIndex) {
-
+ 
 
   editIndex = itemIndex;
   let goldData =
@@ -915,10 +985,10 @@ function editShopData(workerIndex, itemIndex) {
   document.getElementById("getfactorGram").value = r.getfactor;
   fromGram("getfactor");
   document.getElementById("shopDate").value = r.date;
-  document.getElementById("giveGram").value = r.give;
-  fromGram("give");
-  document.getElementById("getGram").value = r.get;
-  fromGram("get");
+  document.getElementById("sgiveGram").value = r.give;
+  fromGram("sgive");
+  document.getElementById("sgetGram").value = r.get;
+  fromGram("sget");
   document.getElementById("givefactorGram").value = r.givefactor;
   fromGram("givefactor");
 }
@@ -945,6 +1015,15 @@ function closeShopList(index) {
 
   if (goldData.length == 0) {
     alert("စာရင်းမရှိပါ");
+    return;
+  }
+
+
+  // ✅ Check အားလုံး true ဖြစ်ရမည်
+  let allChecked = goldData.every(item => item.checked === true);
+
+  if (!allChecked) {
+    alert("စာရင်းမပိတ်နိုင်သေးပါ!\nRecord အားလုံးကို ✓ Check လုပ်ပြီးမှ ပိတ်နိုင်ပါသည်။");
     return;
   }
 
