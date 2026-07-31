@@ -14,11 +14,13 @@ body{
 .container{
     width:100%;
     max-width:100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 5px;
 }
 
 .nav-menu{
-        display: flex;
-        flex-direction: column;
+        display: grid;
         padding: 5px;
         list-style: none;  
     }
@@ -91,7 +93,7 @@ body{
         cursor: pointer;
 }
 
-.second-nav{
+.second-nav, .third-nav{
     display: flex; 
     justify-content: space-between;
     width: 100%;
@@ -109,14 +111,14 @@ body{
         user-select: none;
     }
 
-.second-nav .icon{
+.icon{
         font-size: 20px;
         user-select: none;
         cursor: pointer;
     }    
 
-.second-nav input[type=date]{
-    width:130px;
+.third-nav input[type=date]{
+    border-radius: 5px;
 }
 
 .input-group-ctn{
@@ -235,11 +237,15 @@ body{
     
 
     .second-nav{
-        font-size:14px;
+        font-size:12px;
     }
 
-    .second-nav .icon{
+.icon{
         font-size:22px;
+    }
+
+    table{
+        display: none;
     }
 
     .input-group-ctn{

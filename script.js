@@ -411,7 +411,7 @@ const workerDetail = (index) => {
 
   let html = "";
   html += `
-      <div class="second-nav">
+      <div class="third-nav">
         <div class= "icon" onclick="workerBack()" >⬅️</div>
         
         <div style="text-align: center;" >${workers[index].name}</div>
