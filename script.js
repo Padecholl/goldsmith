@@ -495,7 +495,7 @@ const workerDetail = (index) => {
                                 <th>နေ့စွဲ</th>
                                 <th>ပေးရွှေ</th>
                                 <th>အပ်ရွှေ</th>
-                                <th>အမျိုးအစား</th>
+                                <th>Type</th>
                                 <th>လျော့</th>
                                 <th>ကျန်</th>
                                 <th>Action</th>
@@ -569,8 +569,8 @@ function showWorker(index) {
         <td>${goldText(f)}</td>
         <td>${goldText(balance)}</td>
 
-        <td><button onclick="closeWorkerList(${index})">
-    📦 စာရင်းပိတ်
+        <td><button style="font-size:10px" onclick="closeWorkerList(${index})">
+      စာရင်းပိတ်
     </button></td>
     </tr>
     `;

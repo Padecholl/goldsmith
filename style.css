@@ -158,7 +158,7 @@ body{
     margin-top: 8px;
     border: 1px solid #322f2f;
     border-radius: 8px;
-    font-size: 12px;
+    font-size: 14px;
     outline: none;
     transition: .25s;
 }
@@ -188,14 +188,14 @@ button {
       }
 table {
         width: 100%;
-        border-collapse: collapse;
+        /* border-collapse: collapse; */
         padding: 5px;
         margin-top: 5px;
       }
 th,td {
         border: 1px solid #999;
         padding: 2px;
-        text-align: center;
+        text-align: right;
       }
 th {
         background: #ddd;
@@ -239,17 +239,13 @@ th {
         font-size:22px;
     }
 
-    table{
-        display: none;
-    }
-
     .input-group{
         width:100%;
     }
 
     .input-group input,
     #types{
-        font-size:14px;
+        font-size:12px;
     }
 
     .kpy-div{
@@ -267,11 +263,12 @@ th {
 
     th,
     td{
-        padding:3px;
+        padding:0px;
         white-space:nowrap;
     }
 
     button{
-        font-size:14px;
+        font-size:10px;
+        padding: 0;
     }
 }
