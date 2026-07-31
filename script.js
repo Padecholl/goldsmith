@@ -581,18 +581,20 @@ function showWorker(index) {
 
         <td>
           <input type="checkbox"
-            ${x.checked ? "checked" : ""}
+            ${x.checked ? "checked" : " "}
             onchange="wtoggleCheck(${index}, ${i})">
         </td>
 
         <td>${formatDate(x.date)}</td>
 
-        <td>${displayGold(x.give)}</td>
-        <td>${displayGold(x.get)}</td>
+            <td>${x.give ? displayGold(x.give) : "-"}</td>
 
-        <td>${x.types}</td>
+            <td>${x.get ? displayGold(x.get) : "-"}</td>
 
-        <td>${displayGold(x.factor)}</td>
+
+        <td>${x.types ? x.types : "-"}</td>
+
+        <td>${x.factor ? displayGold(x.factor) : "-"}</td>
 
         <td>${displayGold(balance)}</td>
 
@@ -981,8 +983,8 @@ function showShop(index) {
             <td>${x.get ? displayGold(x.get) : "-"}</td>
             <td>${x.give ? displayGold(x.give) : "-"}</td>
             
-            <td>${x.getfactor ? displayGold(x.getfactor) : " "}</td>
-            <td>${x.givefactor ? displayGold(x.givefactor) : " "}</td>
+            <td>${x.getfactor ? displayGold(x.getfactor) : "-"}</td>
+            <td>${x.givefactor ? displayGold(x.givefactor) : "-"}</td>
             <!-- လက်ကျန်ရွှေ -->
             <td>${displayGold(balance)}</td>
 
@@ -1209,12 +1211,12 @@ function finalResult() {
             <tr>
             <td>${item.worker || item.name}</td>
                 <td></td>
-                <td>${displayGold(item.totalGet)}</td>
-                <td>${displayGold(item.totalGive)}</td>
-                <td>${displayGold(Factor)}</td>
-                <td>${displayGold(getFactor)}</td>
-                <td>${displayGold(giveFactor)}</td>
-                <td>${displayGold(item.balance)}</td>
+                <td>${item.totalGet ? displayGold(item.totalGet) : "-"}</td>
+                <td>${item.totalGive ? displayGold(item.totalGive) : "-"}</td>
+                <td>${Factor ? displayGold(Factor) : "-"}</td>
+                <td>${getFactor ? displayGold(getFactor) : "-"}</td>
+                <td>${giveFactor ? displayGold(giveFactor) : "-"}</td>
+                <td>${item.balance ? displayGold(item.balance) : "-"}</td>
             </tr>
             `;
 
@@ -1310,10 +1312,10 @@ function WorkerHistory(workerName) {
             <tr>
                 <td>${i + 1}</td>
                 <td>${formatDate(x.closeDate)}</td>
-                <td>${displayGold(x.totalGive)}</td>
-                <td>${displayGold(x.totalGet)}</td>
-                <td>${displayGold(x.balance)}</td>
-                <td>${displayGold(x.totalFactor)}</td>
+                <td>${x.totalGive ? displayGold(x.totalGive) : "-"}</td>
+                <td>${x.totalGet ? displayGold(x.totalGet) : "-"}</td>
+                <td>${x.balance ? displayGold(x.balance) : "-"}</td>
+                <td>${x.totalFactor ? displayGold(x.totalFactor) : "-"}</td>
                 <td>
                     <button class="res-btn2" onclick="workerView('${workerName}', ${i})">
                         View
@@ -1354,10 +1356,10 @@ function WorkerHistory(workerName) {
             <tfoot>
                 <tr>
                     <th colspan="2">စုစုပေါင်း</th>
-                    <th>${displayGold(totalGive)}</th>
-                    <th>${displayGold(totalGet)}</th>
-                    <th>${displayGold(totalBalance)}</th>
-                    <th>${displayGold(totalFactor)}</th>
+                    <th>${totalGive ? displayGold(totalGive) : "-"}</th>
+                    <th>${totalGet ? displayGold(totalGet) : "-"}</th>
+                    <th>${totalBalance ? displayGold(totalBalance) : "-"}</th>
+                    <th>${totalFactor ? displayGold(totalFactor) : "-"}</th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -1395,11 +1397,11 @@ function ShopHistory(shopName) {
             <tr>
                 <td>${i + 1}</td>
                 <td>${formatDate(x.closeDate)}</td>
-                <td>${displayGold(x.totalGet)}</td>
-                <td>${displayGold(x.totalGive)}</td>
-                <td>${displayGold(x.totalGetFactor)}</td>
-                <td>${displayGold(x.totalGiveFactor)}</td>
-                <td>${displayGold(x.balance)}</td>
+                <td>${x.totalGet ? displayGold(x.totalGet) : "-"}</td>
+                <td>${x.totalGive ? displayGold(x.totalGive) : "-"}</td>
+                <td>${x.totalGetFactor ? displayGold(x.totalGetFactor) : "-"}</td>
+                <td>${x.totalGiveFactor ? displayGold(x.totalGiveFactor) : "-"}</td>
+                <td>${x.balance ? displayGold(x.balance) : "-"}</td>
                 <td>
                     <button class="res-btn2" onclick="shopView('${shopName}', ${i})">
     View
@@ -1442,11 +1444,11 @@ function ShopHistory(shopName) {
             <tfoot>
                 <tr style="background:#eee;font-weight:bold">
                     <th colspan="2">စုစုပေါင်း</th>
-                    <th>${displayGold(totalGet)}</th>
-                    <th>${displayGold(totalGive)}</th>
-                    <th>${displayGold(totalGetFactor)}</th>
-                    <th>${displayGold(totalGiveFactor)}</th>
-                    <th>${displayGold(totalBalance)}</th>
+                    <th>${totalGet ? displayGold(totalGet) : "_"}</th>
+                    <th>${totalGive ? displayGold(totalGive) : "_"}</th>
+                    <th>${totalGetFactor ? displayGold(totalGetFactor) : "_"}</th>
+                    <th>${totalGiveFactor ? displayGold(totalGiveFactor) : "_"}</th>
+                    <th>${totalBalance ? displayGold(totalBalance) : "_"}</th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -1494,11 +1496,11 @@ function shopView(shopName, index) {
     html += `
             <tr>
                 <td>${formatDate(x.date)}</td>
-                <td>${displayGold(get)}</td>
-                <td>${displayGold(give)}</td>
-                <td>${displayGold(getFactor)}</td>
-                <td>${displayGold(giveFactor)}</td>
-                <td>${displayGold(balance)}</td>
+                <td>${get ? displayGold(get) : "-"}</td>
+                <td>${give ? displayGold(give) : "-"}</td>
+                <td>${getFactor ? displayGold(getFactor) : "-"}</td>
+                <td>${giveFactor ? displayGold(giveFactor) : "-"}</td>
+                <td>${balance ? displayGold(balance) : "-"}</td>
             </tr>
         `;
   });
@@ -1508,11 +1510,11 @@ function shopView(shopName, index) {
   html += `
         <tr style="background:#eee;font-weight:bold">
             <td>Total</td>
-            <td>${displayGold(totalGet)}</td>
-            <td>${displayGold(totalGive)}</td>
-            <td>${displayGold(totalGetFactor)}</td>
-            <td>${displayGold(totalGiveFactor)}</td>
-            <td>${displayGold(totalBalance)}</td>
+            <td>${totalGet ? displayGold(totalGet) : "-"}</td>
+            <td>${totalGive ? displayGold(totalGive) : "-"}</td>
+            <td>${totalGetFactor ? displayGold(totalGetFactor) : "-"}</td>
+            <td>${totalGiveFactor ? displayGold(totalGiveFactor) : "-"}</td>
+            <td>${totalBalance ? displayGold(totalBalance) : "-"}</td>
         </tr>
     `;
 
@@ -1553,11 +1555,11 @@ function workerView(workerName, index) {
 
             <tr>
               <td>${formatDate(x.date)}</td>
-              <td>${displayGold(give)}</td>
-              <td>${displayGold(get)}</td>
+              <td>${give ? displayGold(give) : "-"}</td>
+              <td>${get ? displayGold(get) : "-"}</td>
               <td>${x.types || "-"}</td>
-              <td>${displayGold(balance)}</td>
-              <td>${displayGold(factor)}</td>
+              <td>${balance ? displayGold(balance) : "-"}</td>
+              <td>${factor ? displayGold(factor) : "-"}</td>
             </tr>
             `;
   });
@@ -1567,11 +1569,11 @@ function workerView(workerName, index) {
   html += `
         <tr style="background:#eee;font-weight:bold;">
           <td>Total</td>
-          <td>${displayGold(totalGive)}</td>
-          <td>${displayGold(totalGet)}</td>
-          <td></td>
-          <td>${displayGold(totalGet - totalGive)}</td>
-          <td>${displayGold(totalFactor)}</td>
+          <td>${totalGive ? displayGold(totalGive) : "-"}</td>
+          <td>${totalGet ? displayGold(totalGet) : "-"}</td>
+          <td>-</td>
+          <td>${totalGet - totalGive ? displayGold(totalGet - totalGive) : "-"}</td>
+          <td>${totalFactor ? displayGold(totalFactor) : "-"}</td>
         </tr>
         `;
 
