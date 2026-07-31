@@ -229,6 +229,17 @@ function goldText(g) {
     `;
 }
 
+    // 📱 Mobile = gram, 💻 Desktop = goldText
+  const isMobile = window.innerWidth < 768;
+
+  function displayGold(value) {
+    value = Number(value || 0);
+
+    if (value === 0) return " ";
+
+    return isMobile ? value.toFixed(2) + "g" : goldText(value);
+  }
+
 function Save(type) {
   let input = document.getElementById(
     type === "worker" ? "name_input" : "shop_input",
@@ -511,17 +522,6 @@ function showWorker(index) {
   let html = "";
   let goldData =
     JSON.parse(localStorage.getItem("goldlists_" + workers[index].name)) || [];
-
-  // 📱 Mobile = gram, 💻 Desktop = goldText
-  const isMobile = window.innerWidth < 768;
-
-  function displayGold(value) {
-    value = Number(value || 0);
-
-    if (value === 0) return " ";
-
-    return isMobile ? value.toFixed(2) + "g" : goldText(value);
-  }
 
   let balance = 0;
 
@@ -914,17 +914,6 @@ function showShop(index) {
   let goldData =
     JSON.parse(localStorage.getItem("goldlists_" + shops[index].name)) || [];
 
-  // 📱 Mobile = gram, 💻 Desktop = goldText
-  const isMobile = window.innerWidth < 768;
-
-  function displayGold(value) {
-    value = Number(value || 0);
-
-    if (value === 0) return " ";
-
-    return isMobile ? value.toFixed(2) + "g" : goldText(value);
-  }
-
   let balance = 0; // Running Balance
 
   goldData.forEach((x, i) => {
@@ -1157,6 +1146,8 @@ function finalResult() {
 
     let history = JSON.parse(localStorage.getItem(key)) || [];
 
+
+
     history.forEach((item) => {
       // Worker => totalFactor
       // Shop => totalGetFactor
@@ -1171,12 +1162,12 @@ function finalResult() {
             <tr>
             <td>${item.worker || item.name}</td>
                 <td></td>
-                <td>${goldText(item.totalGet)}</td>
-                <td>${goldText(item.totalGive)}</td>
-                <td>${goldText(Factor)}</td>
-                <td>${goldText(getFactor)}</td>
-                <td>${goldText(giveFactor)}</td>
-                <td>${goldText(item.balance)}</td>
+                <td>${displayGold(item.totalGet)}</td>
+                <td>${displayGold(item.totalGive)}</td>
+                <td>${displayGold(Factor)}</td>
+                <td>${displayGold(getFactor)}</td>
+                <td>${displayGold(giveFactor)}</td>
+                <td>${displayGold(item.balance)}</td>
             </tr>
             `;
 
@@ -1196,13 +1187,13 @@ function finalResult() {
   document.getElementById("historyFoot").innerHTML = `
         <tr style="font-weight:bold;background:#ffeeba">
             <td colspan="1">စုစုပေါင်း</td>
-            <td>${goldText(totalOwnGold)}</td>
-            <td>${goldText(totalGet)}</td>
-            <td>${goldText(totalGive)}</td>
-            <td>${goldText(totalFactor)}</td>
-            <td>${goldText(totalGetFactor)}</td>
-            <td>${goldText(totalGiveFactor)}</td>
-            <td>${goldText(finalBalance)}</td>
+            <td>${displayGold(totalOwnGold)}</td>
+            <td>${displayGold(totalGet)}</td>
+            <td>${displayGold(totalGive)}</td>
+            <td>${displayGold(totalFactor)}</td>
+            <td>${displayGold(totalGetFactor)}</td>
+            <td>${displayGold(totalGiveFactor)}</td>
+            <td>${displayGold(finalBalance)}</td>
         </tr>
     `;
 }
@@ -1272,10 +1263,10 @@ function WorkerHistory(workerName) {
             <tr>
                 <td>${i + 1}</td>
                 <td>${formatDate(x.closeDate)}</td>
-                <td>${goldText(x.totalGive)}</td>
-                <td>${goldText(x.totalGet)}</td>
-                <td>${goldText(x.balance)}</td>
-                <td>${goldText(x.totalFactor)}</td>
+                <td>${displayGold(x.totalGive)}</td>
+                <td>${displayGold(x.totalGet)}</td>
+                <td>${displayGold(x.balance)}</td>
+                <td>${displayGold(x.totalFactor)}</td>
                 <td>
                     <button onclick="workerView('${workerName}', ${i})">
                         View
@@ -1318,10 +1309,10 @@ function WorkerHistory(workerName) {
             <tfoot>
                 <tr>
                     <th colspan="2">စုစုပေါင်း</th>
-                    <th>${goldText(totalGive)}</th>
-                    <th>${goldText(totalGet)}</th>
-                    <th>${goldText(totalBalance)}</th>
-                    <th>${goldText(totalFactor)}</th>
+                    <th>${displayGold(totalGive)}</th>
+                    <th>${displayGold(totalGet)}</th>
+                    <th>${displayGold(totalBalance)}</th>
+                    <th>${displayGold(totalFactor)}</th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -1359,11 +1350,11 @@ function ShopHistory(shopName) {
             <tr>
                 <td>${i + 1}</td>
                 <td>${formatDate(x.closeDate)}</td>
-                <td>${goldText(x.totalGet)}</td>
-                <td>${goldText(x.totalGive)}</td>
-                <td>${goldText(x.totalGetFactor)}</td>
-                <td>${goldText(x.totalGiveFactor)}</td>
-                <td>${goldText(x.balance)}</td>
+                <td>${displayGold(x.totalGet)}</td>
+                <td>${displayGold(x.totalGive)}</td>
+                <td>${displayGold(x.totalGetFactor)}</td>
+                <td>${displayGold(x.totalGiveFactor)}</td>
+                <td>${displayGold(x.balance)}</td>
                 <td>
                     <button onclick="shopView('${shopName}', ${i})">
     View
@@ -1407,11 +1398,11 @@ function ShopHistory(shopName) {
             <tfoot>
                 <tr style="background:#eee;font-weight:bold">
                     <th colspan="2">စုစုပေါင်း</th>
-                    <th>${goldText(totalGet)}</th>
-                    <th>${goldText(totalGive)}</th>
-                    <th>${goldText(totalGetFactor)}</th>
-                    <th>${goldText(totalGiveFactor)}</th>
-                    <th>${goldText(totalBalance)}</th>
+                    <th>${displayGold(totalGet)}</th>
+                    <th>${displayGold(totalGive)}</th>
+                    <th>${displayGold(totalGetFactor)}</th>
+                    <th>${displayGold(totalGiveFactor)}</th>
+                    <th>${displayGold(totalBalance)}</th>
                     <th></th>
                 </tr>
             </tfoot>
@@ -1419,9 +1410,10 @@ function ShopHistory(shopName) {
     `;
 }
 
+
+
 function shopView(shopName, index) {
-  let history =
-    JSON.parse(localStorage.getItem("shopHistory_" + shopName)) || [];
+  let history = JSON.parse(localStorage.getItem("shopHistory_" + shopName)) || [];
 
   let data = history[index];
 
@@ -1431,6 +1423,8 @@ function shopView(shopName, index) {
   }
 
   let details = data.details || [];
+
+
 
   let html = "";
 
@@ -1456,11 +1450,11 @@ function shopView(shopName, index) {
     html += `
             <tr>
                 <td>${formatDate(x.date)}</td>
-                <td>${goldText(get)}</td>
-                <td>${goldText(give)}</td>
-                <td>${goldText(getFactor)}</td>
-                <td>${goldText(giveFactor)}</td>
-                <td>${goldText(balance)}</td>
+                <td>${displayGold(get)}</td>
+                <td>${displayGold(give)}</td>
+                <td>${displayGold(getFactor)}</td>
+                <td>${displayGold(giveFactor)}</td>
+                <td>${displayGold(balance)}</td>
             </tr>
         `;
   });
@@ -1470,11 +1464,11 @@ function shopView(shopName, index) {
   html += `
         <tr style="background:#eee;font-weight:bold">
             <td>Total</td>
-            <td>${goldText(totalGet)}</td>
-            <td>${goldText(totalGive)}</td>
-            <td>${goldText(totalGetFactor)}</td>
-            <td>${goldText(totalGiveFactor)}</td>
-            <td>${goldText(totalBalance)}</td>
+            <td>${displayGold(totalGet)}</td>
+            <td>${displayGold(totalGive)}</td>
+            <td>${displayGold(totalGetFactor)}</td>
+            <td>${displayGold(totalGiveFactor)}</td>
+            <td>${displayGold(totalBalance)}</td>
         </tr>
     `;
 
@@ -1515,11 +1509,11 @@ function workerView(workerName, index) {
 
             <tr>
               <td>${formatDate(x.date)}</td>
-              <td>${goldText(give)}</td>
-              <td>${goldText(get)}</td>
+              <td>${displayGold(give)}</td>
+              <td>${displayGold(get)}</td>
               <td>${x.types || "-"}</td>
-              <td>${goldText(balance)}</td>
-              <td>${goldText(factor)}</td>
+              <td>${displayGold(balance)}</td>
+              <td>${displayGold(factor)}</td>
             </tr>
             `;
   });
@@ -1529,11 +1523,11 @@ function workerView(workerName, index) {
   html += `
         <tr style="background:#eee;font-weight:bold;">
           <td>Total</td>
-          <td>${goldText(totalGive)}</td>
-          <td>${goldText(totalGet)}</td>
+          <td>${displayGold(totalGive)}</td>
+          <td>${displayGold(totalGet)}</td>
           <td></td>
-          <td>${goldText(totalGet - totalGive)}</td>
-          <td>${goldText(totalFactor)}</td>
+          <td>${displayGold(totalGet - totalGive)}</td>
+          <td>${displayGold(totalFactor)}</td>
         </tr>
         `;
 
