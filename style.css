@@ -186,7 +186,7 @@ body{
       }
       table {
         width: 100%;
-        /* border-collapse: collapse; */
+        border-collapse: collapse;
         padding: 5px;
         margin-top: 5px;
       }
