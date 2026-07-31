@@ -1482,9 +1482,9 @@ function ShopHistory(shopName) {
                 <tr>
                     <th>No</th>
                     <th>ပိတ်ရက်</th>
-                    <th>အပ်</th>
+                    <th>ရ</th>
                     <th>ပေး</th>
-                    <th>အပ်လျော့</th>
+                    <th>ရလျော့</th>
                     <th>ပေးလျော့</th>
                     <th>ကျန်</th>
                     <th>Action</th>
