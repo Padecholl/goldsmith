@@ -106,8 +106,65 @@ function restoreData() {
   input.click();
 }
 
+// function deleteAllData() {
+//   // ✅ Workers စစ်
+//   for (let worker of workers) {
+//     let key = "goldlists_" + worker.name;
+//     let goldData = JSON.parse(localStorage.getItem(key)) || [];
+
+//     if (goldData.length > 0) {
+//       alert(
+//         worker.name +
+//           " မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
+//       );
+//       return;
+//     }
+//   }
+
+//   // ✅ Shops စစ်
+//   for (let shop of shops) {
+//     let key = "goldlists_" + shop.name;
+//     let shopData = JSON.parse(localStorage.getItem(key)) || [];
+
+//     if (shopData.length > 0) {
+//       alert(
+//         shop.name +
+//           " ဆိုင်မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
+//       );
+//       return;
+//     }
+//   }
+
+//   let pass = prompt("Password");
+
+//   if (pass !== localStorage.getItem("password")) {
+//     alert("Password မှားပါတယ်");
+//     return;
+//   }
+
+//   if (confirm("Data အားလုံးဖျက်မှာ သေချာပါသလား?")) {
+    
+//     Object.keys(localStorage).forEach((key) => {
+//       if (
+//         key.startsWith("workerHistory_") ||
+//         key.startsWith("shopHistory_")
+//       ) {
+//         localStorage.removeItem(key);
+//       }
+//     });
+
+//     localStorage.removeItem("owngold");
+
+//     alert("ဖျက်ပြီးပါပြီ");
+//     location.reload();
+//   }
+// }
+
 function deleteAllData() {
-  // ✅ Workers စစ်
+
+  // ===========================
+  // Workers စစ်
+  // ===========================
   for (let worker of workers) {
     let key = "goldlists_" + worker.name;
     let goldData = JSON.parse(localStorage.getItem(key)) || [];
@@ -115,13 +172,15 @@ function deleteAllData() {
     if (goldData.length > 0) {
       alert(
         worker.name +
-          " မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
+          " မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။"
       );
       return;
     }
   }
 
-  // ✅ Shops စစ်
+  // ===========================
+  // Shops စစ်
+  // ===========================
   for (let shop of shops) {
     let key = "goldlists_" + shop.name;
     let shopData = JSON.parse(localStorage.getItem(key)) || [];
@@ -129,12 +188,15 @@ function deleteAllData() {
     if (shopData.length > 0) {
       alert(
         shop.name +
-          " ဆိုင်မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
+          " ဆိုင်မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။"
       );
       return;
     }
   }
 
+  // ===========================
+  // Password စစ်
+  // ===========================
   let pass = prompt("Password");
 
   if (pass !== localStorage.getItem("password")) {
@@ -142,38 +204,72 @@ function deleteAllData() {
     return;
   }
 
-  if (confirm("Data အားလုံးဖျက်မှာ သေချာပါသလား?")) {
-    
-          let data = {};
-
-
-
-    Object.keys(localStorage).forEach((key) => {
-      data[key] = localStorage.getItem(key);
-      if (
-        key.startsWith("workerHistory_") ||
-        key.startsWith("shopHistory_")
-      ) {
-        localStorage.removeItem(key);
-          let blob = new Blob([JSON.stringify(data, null, 2)], {
-            type: "application/json",
-          });
-
-          let a = document.createElement("a");
-
-          a.href = URL.createObjectURL(blob);
-
-          a.download = "keybell_backup.json";
-
-          a.click();
-      }
-    });
-
-    localStorage.removeItem("owngold");
-
-    alert("ဖျက်ပြီးပါပြီ");
-    location.reload();
+  // ===========================
+  // Confirm
+  // ===========================
+  if (!confirm("History များကို မဖျက်ခင် Backup သိမ်းပြီး ဖျက်မှာ သေချာပါသလား?")) {
+    return;
   }
+
+  // ===========================
+  // Backup Download
+  // ===========================
+  let backup = {};
+
+  Object.keys(localStorage).forEach((key) => {
+    backup[key] = localStorage.getItem(key);
+  });
+
+  let blob = new Blob(
+    [JSON.stringify(backup, null, 2)],
+    { type: "application/json" }
+  );
+
+  let url = URL.createObjectURL(blob);
+
+  let a = document.createElement("a");
+
+  let d = new Date();
+
+  let fileName =
+    "Gold_Backup_" +
+    d.getFullYear() +
+    "-" +
+    String(d.getMonth() + 1).padStart(2, "0") +
+    "-" +
+    String(d.getDate()).padStart(2, "0") +
+    "_" +
+    String(d.getHours()).padStart(2, "0") +
+    "-" +
+    String(d.getMinutes()).padStart(2, "0") +
+    "-" +
+    String(d.getSeconds()).padStart(2, "0") +
+    ".json";
+
+  a.href = url;
+  a.download = fileName;
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+  // ===========================
+  // Delete History
+  // ===========================
+  Object.keys(localStorage).forEach((key) => {
+    if (
+      key.startsWith("workerHistory_") ||
+      key.startsWith("shopHistory_")
+    ) {
+      localStorage.removeItem(key);
+    }
+  });
+
+  // Own Gold ဖျက်
+  localStorage.removeItem("owngold");
+
+  alert("Backup သိမ်းပြီး History များကို ဖျက်ပြီးပါပြီ။");
+
+  location.reload();
 }
 
 let workers = JSON.parse(localStorage.getItem("workers")) || [];
