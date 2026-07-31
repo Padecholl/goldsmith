@@ -120,7 +120,6 @@ body {
 .input-group-ctn{
     display: flex;
     justify-content: space-between;
-    
     gap: 2px;
     margin: 2px;
 }
