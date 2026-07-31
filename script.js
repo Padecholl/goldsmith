@@ -106,59 +106,6 @@ function restoreData() {
   input.click();
 }
 
-// function deleteAllData() {
-//   // ✅ Workers စစ်
-//   for (let worker of workers) {
-//     let key = "goldlists_" + worker.name;
-//     let goldData = JSON.parse(localStorage.getItem(key)) || [];
-
-//     if (goldData.length > 0) {
-//       alert(
-//         worker.name +
-//           " မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
-//       );
-//       return;
-//     }
-//   }
-
-//   // ✅ Shops စစ်
-//   for (let shop of shops) {
-//     let key = "goldlists_" + shop.name;
-//     let shopData = JSON.parse(localStorage.getItem(key)) || [];
-
-//     if (shopData.length > 0) {
-//       alert(
-//         shop.name +
-//           " ဆိုင်မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
-//       );
-//       return;
-//     }
-//   }
-
-//   let pass = prompt("Password");
-
-//   if (pass !== localStorage.getItem("password")) {
-//     alert("Password မှားပါတယ်");
-//     return;
-//   }
-
-//   if (confirm("Data အားလုံးဖျက်မှာ သေချာပါသလား?")) {
-    
-//     Object.keys(localStorage).forEach((key) => {
-//       if (
-//         key.startsWith("workerHistory_") ||
-//         key.startsWith("shopHistory_")
-//       ) {
-//         localStorage.removeItem(key);
-//       }
-//     });
-
-//     localStorage.removeItem("owngold");
-
-//     alert("ဖျက်ပြီးပါပြီ");
-//     location.reload();
-//   }
-// }
 
 function deleteAllData() {
 
@@ -399,11 +346,11 @@ function display() {
   workers.forEach((item, index) => {
     workerHtml += `
         <div class="name-div">
-            <div onclick="workerDetail(${index})" style="width:95%">
+            <div onclick="workerDetail(${index})" style="width:90%">
                 ${item.name}
             </div>
-            <div>
-               <button onclick="Delete('worker', ${index})">🗑</button>
+            <div >
+               <button onclick="Delete('worker', ${index})" style="padding: 0 10px;" >🗑</button>
             </div>
         </div>
         `;
@@ -420,7 +367,7 @@ function display() {
                 ${item.name}
             </div>
 
-            <button onclick="Delete('shops', ${index})">🗑</button>
+            <button onclick="Delete('shops', ${index})" style="padding: 0 10px;" >🗑</button>
 
         </div>
         `;
@@ -519,7 +466,7 @@ const workerDetail = (index) => {
 
   let html = "";
   html += `
-      <div class="third-nav">
+      <div class="second-nav">
         <div class= "icon" onclick="workerBack()" >⬅️</div>
         
         <div style="text-align: center;" >${workers[index].name}</div>
@@ -594,7 +541,7 @@ const workerDetail = (index) => {
                         </div>
                     </div>
                     <div>
-                        <button onclick="saveWorkersData(${index})">SAVE</button>
+                        <button class="res-btn" onclick="saveWorkersData(${index})">SAVE</button>
                     </div>
             </div>
                         <table>
@@ -654,8 +601,8 @@ function showWorker(index) {
             x.checked
               ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
               : `
-                <button onclick="editData(${index}, ${i})">✏️</button>
-                <button onclick="deleteData(${index}, ${i})">🗑️</button>
+                <button class="res-btn2" onclick="editData(${index}, ${i})">✏️</button>
+                <button class="res-btn2" onclick="deleteData(${index}, ${i})">🗑️</button>
               `
           }
         </td>
@@ -675,7 +622,7 @@ function showWorker(index) {
   });
 
   html += `
-    <tr style="font-weight:bold;background:#ffeeba">
+    <tr style="font-weight:bold;background:#eeee">
 
       <td colspan="2">စုစုပေါင်း</td>
 
@@ -689,7 +636,7 @@ function showWorker(index) {
       <td>${displayGold(balance)}</td>
 
       <td>
-        <button style="font-size:10px"
+        <button class="res-btn"
           onclick="closeWorkerList(${index})">
           စာရင်းပိတ်
         </button>
@@ -982,14 +929,14 @@ const shopDetail = (index) => {
                                     </div>
                             </div>
 
-                            <div>
-                                <button onclick="saveShopData(${index})">SAVE</button>
+                        </div>
+                  </div> 
+                            <div style="width=100%; display:flex; align-item;center; justify-content:center;">
+                                <button class="res-btn1" onclick="saveShopData(${index})">SAVE</button>
                             </div>
-                       </div>
-                </div> 
             
                         <table>
-                            <tr>
+                            <tr style="background-color:#eeee">
                                 <th>☑</th>
                                 <th>နေ့စွဲ</th>
                                 <th>လက်ခံ</th>
@@ -1044,8 +991,8 @@ function showShop(index) {
                   x.checked
                     ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
                     : `
-                        <button onclick="editShopData(${index}, ${i})">✏️</button>
-                        <button onclick="deleteShopData(${index}, ${i})">🗑️</button>
+                        <button class="res-btn2" onclick="editShopData(${index}, ${i})">✏️</button>
+                        <button class="res-btn2" onclick="deleteShopData(${index}, ${i})">🗑️</button>
                     `
                 }
             </td>
@@ -1068,15 +1015,15 @@ function showShop(index) {
   });
 
   html += `
-    <tr style="font-weight:bold;background:#ffeeba;">
-        <td ></td>
-        <td colspan="1">စုစုပေါင်း</td>
+    <tr style="font-weight:bold;background:#eeee;">
+        
+        <td colspan="2">စုစုပေါင်း</td>
         <td>${displayGold(t)}</td>
         <td>${displayGold(g)}</td>
         <td>${displayGold(f)}</td>
         <td>${displayGold(c)}</td>
         <td>${displayGold(balance)}</td>
-        <td><button onclick="closeShopList(${index})">
+        <td><button class="res-btn" onclick="closeShopList(${index})">
           စာရင်းပိတ်
     </button></td>
     </tr>
@@ -1285,7 +1232,7 @@ function finalResult() {
   document.getElementById("final_history").innerHTML = html;
 
   document.getElementById("historyFoot").innerHTML = `
-        <tr style="font-weight:bold;background:#ffeeba">
+        <tr style="font-weight:bold;background:#eeee;">
             <td colspan="1">စုစုပေါင်း</td>
             <td>${displayGold(totalOwnGold)}</td>
             <td>${displayGold(totalGet)}</td>
@@ -1368,7 +1315,7 @@ function WorkerHistory(workerName) {
                 <td>${displayGold(x.balance)}</td>
                 <td>${displayGold(x.totalFactor)}</td>
                 <td>
-                    <button onclick="workerView('${workerName}', ${i})">
+                    <button class="res-btn2" onclick="workerView('${workerName}', ${i})">
                         View
                     </button>
                 </td>
@@ -1377,16 +1324,14 @@ function WorkerHistory(workerName) {
   });
 
   document.getElementById("mainHWorkerTable").innerHTML = `
-      <div style="text-align: center; display: flex;; align-items: center; justify-content: space-between; background: #eee;padding: 2px;">
-        <div>
-            <div  onclick="WhBack()">⬅️</div>
-        </div>
+      <div class="second-nav">
+        <div onclick="Back()" class="icon">🏠</div>
         
         <div style="text-align: center;" >${workerName}</div>
+
+        <div class="icon"  onclick="WhBack()">⬅️</div>
+
         
-        <div>
-            <input id="workDate" type="date"/>
-        </div>
       </div>
 
         <table border="1">
@@ -1456,7 +1401,7 @@ function ShopHistory(shopName) {
                 <td>${displayGold(x.totalGiveFactor)}</td>
                 <td>${displayGold(x.balance)}</td>
                 <td>
-                    <button onclick="shopView('${shopName}', ${i})">
+                    <button class="res-btn2" onclick="shopView('${shopName}', ${i})">
     View
 </button>
                 </td>
@@ -1465,16 +1410,15 @@ function ShopHistory(shopName) {
   });
 
   document.getElementById("mainHShopTable").innerHTML = `
-    <div style="text-align: center; display: flex;; align-items: center; justify-content: space-between; background: #eee;padding: 2px;">
-        <div>
-            <div  onclick="ShBack()">⬅️</div>
-        </div>
+    <div class="second-nav">
+       <div onclick="Back()" class="icon">🏠</div>
+
+       <div style="text-align: center;" >${shopName}</div>
+
+        <div class="icon" onclick="ShBack()">⬅️</div>
+
         
-        <div style="text-align: center;" >${shopName}</div>
         
-        <div>
-            <input id="workDate" type="date"/>
-        </div>
       </div>
 
         <table border="1">
@@ -1766,10 +1710,11 @@ function deleteOwnData(workerIndex, itemIndex) {
 }
 
 function Back() {
-  document.querySelector(".navbar").classList.remove("inactive");
-  document.querySelectorAll(".page").forEach((page) => {
-    page.classList.remove("active");
-  });
+  location.reload()
+  // document.querySelector(".navbar").classList.remove("inactive");
+  // document.querySelectorAll(".page").forEach((page) => {
+  //   page.classList.remove("active");
+  // });
 }
 
 function workerBack() {

@@ -10,15 +10,15 @@
          
         <div class="container">
                 <nav class="navbar">
-                    <h2 style="text-align: center;">ရတနာခမ်း</h2>
+                    <h2 style="text-align: center;padding-top: 5px;background-color: gold;">ရတနာခမ်း</h2>
                             <div class="nav-menu">
-                                <li onclick="openPage('home', this)">🏠 နာမည်သွင်းရန်</li>
-                                <li onclick="openPage('workers', this)">👥 တပည့်စာရင်းသွင်းရန်</li>
-                                <li onclick="openPage('shop', this)">🏪 ဆိုင်စာရင်းသွင်းရန်</li>
-                                <li onclick="openPage('addown', this)">💰 စိုက်ရွှေထည့်ရန်</li>
+                                <li onclick="openPage('home', this)">🧾 နာမည်သွင်းရန်</li>
+                                <li onclick="openPage('workers', this)">🧾 တပည့်စာရင်းသွင်းရန်</li>
+                                <li onclick="openPage('shop', this)">🧾 ဆိုင်စာရင်းသွင်းရန်</li>
+                                <li onclick="openPage('addown', this)">🧾 စိုက်ရွှေထည့်ရန်</li>
                                 <li onclick="openPage('whistory', this)">🧾တပည့်စားရင်းကြည့်ရန်</li>
                                 <li onclick="openPage('shistory', this)">🧾ဆိုင်စားရင်းကြည့်ရန်</li>
-                                <li onclick="openPage('fhistory', this)">🧾စားရင်းချုပ်ရန်</li>
+                                <li onclick="openPage('fhistory', this)">🧾စားရင်းချုပ်ကြည့်ရန်</li>
                                 <li onclick="openPage('setting', this)">⚙️ Setting</li>
                             </div>
                 </nav>
@@ -32,7 +32,7 @@
 
                     </div>
 
-                    <div>
+                    <div style="padding: 50px;">
                         <p>အမည်</p>
                         <input type="text" id="name_input" placeholder="တပည့်နာမည်ထည့်ပါ...">
                         <button onclick="Save('worker')">ENTER</button>
@@ -130,7 +130,7 @@
                                                     align-items:center;margin-bottom:10px;">
                                             <h5 id="historyDateRange"></h5>
                                             <h3 id="historyWorkerName"></h3>
-                                            <button onclick="closeModal()">❌ Close</button>
+                                            <button onclick="closeModal()">❌</button>
                                         </div>
 
 
@@ -178,7 +178,7 @@
                                                 align-items:center;margin-bottom:10px;">
                                         <h5 id="shopDateRange"></h5>
                                         <h3 id="historyShopName"></h3>
-                                        <button onclick="closeModal()">❌ Close</button>
+                                        <button onclick="closeModal()">❌</button>
                                     </div>
 
 
@@ -210,7 +210,7 @@
                     <div class="second-nav">
                         <div onclick="Back()" class="icon" >🏠</div>
                         <div>စာရင်းချုပ်</div>
-                                    <div  onclick="Back()" class="icon">⬅️</div>
+                        <div  onclick="Back()" class="icon">⬅️</div>
                     </div>
                 
                                 <table border="1" width="100%" cellpadding="5">
