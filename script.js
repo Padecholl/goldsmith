@@ -56,7 +56,7 @@ function backupData() {
 
   a.href = URL.createObjectURL(blob);
 
-  a.download = "keybell_backup.json";
+  a.download = "single_backup.json";
 
   a.click();
 }
@@ -106,9 +106,7 @@ function restoreData() {
   input.click();
 }
 
-
 function deleteAllData() {
-
   // ===========================
   // Workers စစ်
   // ===========================
@@ -119,7 +117,7 @@ function deleteAllData() {
     if (goldData.length > 0) {
       alert(
         worker.name +
-          " မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။"
+          " မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
       );
       return;
     }
@@ -135,7 +133,7 @@ function deleteAllData() {
     if (shopData.length > 0) {
       alert(
         shop.name +
-          " ဆိုင်မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။"
+          " ဆိုင်မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
       );
       return;
     }
@@ -154,7 +152,9 @@ function deleteAllData() {
   // ===========================
   // Confirm
   // ===========================
-  if (!confirm("History များကို မဖျက်ခင် Backup သိမ်းပြီး ဖျက်မှာ သေချာပါသလား?")) {
+  if (
+    !confirm("History များကို မဖျက်ခင် Backup သိမ်းပြီး ဖျက်မှာ သေချာပါသလား?")
+  ) {
     return;
   }
 
@@ -167,10 +167,9 @@ function deleteAllData() {
     backup[key] = localStorage.getItem(key);
   });
 
-  let blob = new Blob(
-    [JSON.stringify(backup, null, 2)],
-    { type: "application/json" }
-  );
+  let blob = new Blob([JSON.stringify(backup, null, 2)], {
+    type: "application/json",
+  });
 
   let url = URL.createObjectURL(blob);
 
@@ -184,13 +183,15 @@ function deleteAllData() {
     "-" +
     String(d.getMonth() + 1).padStart(2, "0") +
     "-" +
-    String(d.getDate()).padStart(2, "0") +
-    "_" +
-    String(d.getHours()).padStart(2, "0") +
-    "-" +
-    String(d.getMinutes()).padStart(2, "0") +
-    "-" +
-    String(d.getSeconds()).padStart(2, "0") +
+    String(d.getDate()).padStart(2, "0") 
+    
+    // +
+    // "_" +
+    // String(d.getHours()).padStart(2, "0") +
+    // "-" +
+    // String(d.getMinutes()).padStart(2, "0") +
+    // "-" +
+    // String(d.getSeconds()).padStart(2, "0") +
     ".json";
 
   a.href = url;
@@ -203,10 +204,7 @@ function deleteAllData() {
   // Delete History
   // ===========================
   Object.keys(localStorage).forEach((key) => {
-    if (
-      key.startsWith("workerHistory_") ||
-      key.startsWith("shopHistory_")
-    ) {
+    if (key.startsWith("workerHistory_") || key.startsWith("shopHistory_")) {
       localStorage.removeItem(key);
     }
   });
@@ -276,16 +274,16 @@ function goldText(g) {
     `;
 }
 
-    // 📱 Mobile = gram, 💻 Desktop = goldText
-  const isMobile = window.innerWidth < 768;
+// 📱 Mobile = gram, 💻 Desktop = goldText
+const isMobile = window.innerWidth < 768;
 
-  function displayGold(value) {
-    value = Number(value || 0);
+function displayGold(value) {
+  value = Number(value || 0);
 
-    if (value === 0) return " ";
+  if (value === 0) return " ";
 
-    return isMobile ? value.toFixed(2) + "g" : goldText(value);
-  }
+  return isMobile ? value.toFixed(2) + "g" : goldText(value);
+}
 
 function Save(type) {
   let input = document.getElementById(
@@ -540,10 +538,10 @@ const workerDetail = (index) => {
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <button class="res-btn" onclick="saveWorkersData(${index})">SAVE</button>
+                </div>
+                    <div style="width=100%; display:flex; align-item;center; justify-content:center;">
+                        <button class="res-btn1" onclick="saveWorkersData(${index})">SAVE</button>
                     </div>
-            </div>
                         <table>
                             <tr>
                                 <th>☑</th>
@@ -1195,8 +1193,6 @@ function finalResult() {
 
     let history = JSON.parse(localStorage.getItem(key)) || [];
 
-
-
     history.forEach((item) => {
       // Worker => totalFactor
       // Shop => totalGetFactor
@@ -1234,6 +1230,7 @@ function finalResult() {
   document.getElementById("final_history").innerHTML = html;
 
   document.getElementById("historyFoot").innerHTML = `
+        
         <tr style="font-weight:bold;background:#eeee;">
             <td colspan="1">စုစုပေါင်း</td>
             <td>${displayGold(totalOwnGold)}</td>
@@ -1245,6 +1242,7 @@ function finalResult() {
             <td>${displayGold(finalBalance)}</td>
         </tr>
     `;
+    
 }
 
 nameForHistory();
@@ -1327,7 +1325,7 @@ function WorkerHistory(workerName) {
 
   document.getElementById("mainHWorkerTable").innerHTML = `
       <div class="second-nav">
-        <div onclick="Back()" class="icon">🏠</div>
+        <div onclick="Back()" class="icon"></div>
         
         <div style="text-align: center;" >${workerName}</div>
 
@@ -1410,10 +1408,10 @@ function ShopHistory(shopName) {
             </tr>
         `;
   });
-
+// 🏠
   document.getElementById("mainHShopTable").innerHTML = `
     <div class="second-nav">
-       <div onclick="Back()" class="icon">🏠</div>
+       <div onclick="Back()" class="icon"></div>
 
        <div style="text-align: center;" >${shopName}</div>
 
@@ -1456,10 +1454,9 @@ function ShopHistory(shopName) {
     `;
 }
 
-
-
 function shopView(shopName, index) {
-  let history = JSON.parse(localStorage.getItem("shopHistory_" + shopName)) || [];
+  let history =
+    JSON.parse(localStorage.getItem("shopHistory_" + shopName)) || [];
 
   let data = history[index];
 
@@ -1469,8 +1466,6 @@ function shopView(shopName, index) {
   }
 
   let details = data.details || [];
-
-
 
   let html = "";
 
@@ -1623,6 +1618,15 @@ function ownSave() {
     own: Number(document.getElementById("ownGram").value) || 0,
   };
 
+  if (ownDate === "") {
+    alert("နေ့စွဲထည့်ပါ");
+    return;
+  }
+  if (obj.own === 0) {
+    alert("စိုက်ရွှေထည့်ပါ");
+    return;
+  }
+
   if (editIndex === -1) {
     // အသစ်ထည့်
     owngold.push(obj);
@@ -1635,6 +1639,7 @@ function ownSave() {
   localStorage.setItem("owngold", JSON.stringify(owngold));
   clear();
   showOwn();
+  finalResult();
 }
 
 function showOwn(index) {
@@ -1708,15 +1713,16 @@ function deleteOwnData(workerIndex, itemIndex) {
     goldData.splice(itemIndex, 1);
     localStorage.setItem("owngold", JSON.stringify(goldData));
     showOwn(workerIndex);
+    finalResult();
   }
 }
 
 function Back() {
-  location.reload()
-  // document.querySelector(".navbar").classList.remove("inactive");
-  // document.querySelectorAll(".page").forEach((page) => {
-  //   page.classList.remove("active");
-  // });
+  // location.reload();
+  document.querySelector(".navbar").classList.remove("inactive");
+  document.querySelectorAll(".page").forEach((page) => {
+    page.classList.remove("active");
+  });
 }
 
 function workerBack() {
