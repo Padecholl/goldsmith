@@ -314,7 +314,9 @@ function Save(type) {
 
   input.value = "";
   display();
+  
 }
+
 
 const now = new Date();
 
@@ -406,7 +408,6 @@ function Delete(type, i) {
   });
 
   alert("ဖျက်ပြီးပါပြီ");
-
   display();
 }
 
@@ -775,7 +776,7 @@ function closeWorkerList(index) {
   localStorage.setItem(key, JSON.stringify([]));
 
   alert("စာရင်းပိတ်ပြီး History ထဲသိမ်းပြီးပါပြီ");
-
+  WorkerHistory();
   showWorker(index);
 }
 
@@ -1162,7 +1163,6 @@ function closeShopList(index) {
   localStorage.setItem(key, JSON.stringify([]));
 
   alert("စာရင်းပိတ်ပြီး History ထဲသိမ်းပြီးပါပြီ");
-
   showShop(index);
 }
 
