@@ -56,7 +56,9 @@ body {
   align-items: center;
   width: 100%;
 }
-#setting button {
+.setting-btns, .about {
+  display:grid;
+  grid-template-columns: 1fr;
   padding: 10px;
   margin: 10px;
 }

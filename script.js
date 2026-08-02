@@ -183,16 +183,16 @@ function deleteAllData() {
     "-" +
     String(d.getMonth() + 1).padStart(2, "0") +
     "-" +
-    String(d.getDate()).padStart(2, "0") 
-    
-    // +
-    // "_" +
-    // String(d.getHours()).padStart(2, "0") +
-    // "-" +
-    // String(d.getMinutes()).padStart(2, "0") +
-    // "-" +
-    // String(d.getSeconds()).padStart(2, "0") +
-    ".json";
+    String(d.getDate()).padStart(2, "0");
+
+  // +
+  // "_" +
+  // String(d.getHours()).padStart(2, "0") +
+  // "-" +
+  // String(d.getMinutes()).padStart(2, "0") +
+  // "-" +
+  // String(d.getSeconds()).padStart(2, "0") +
+  (".json");
 
   a.href = url;
   a.download = fileName;
@@ -1242,7 +1242,6 @@ function finalResult() {
             <td>${displayGold(finalBalance)}</td>
         </tr>
     `;
-    
 }
 
 nameForHistory();
@@ -1408,7 +1407,7 @@ function ShopHistory(shopName) {
             </tr>
         `;
   });
-// 🏠
+  // 🏠
   document.getElementById("mainHShopTable").innerHTML = `
     <div class="second-nav">
        <div onclick="Back()" class="icon"></div>
@@ -1717,8 +1716,11 @@ function deleteOwnData(workerIndex, itemIndex) {
   }
 }
 
+function reBack() {
+  location.reload();
+}
+
 function Back() {
-  // location.reload();
   document.querySelector(".navbar").classList.remove("inactive");
   document.querySelectorAll(".page").forEach((page) => {
     page.classList.remove("active");
@@ -1754,6 +1756,11 @@ function ShBack() {
   document.querySelectorAll(".second-nav").forEach((nav) => {
     nav.classList.remove("inactive");
   });
+}
+
+function showAbout() {
+  document.querySelector(".about").classList.remove("inactive");
+  document.querySelector(".setting-btns").classList.add("inactive");
 }
 
 function clear() {

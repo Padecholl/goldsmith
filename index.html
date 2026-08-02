@@ -235,19 +235,23 @@
 
                 <div id="setting" class="page" >
                     <div class="second-nav">
-                        <div onclick="Back()" class="icon">🏠</div>
-                        <div>Setting</div>
+                        <div onclick="reBack()" class="icon">🏠</div>
+                        <div onclick="reBack()">Setting</div>    
                     </div>
-                        <button onclick="changePassword()">🔐 Password ပြောင်းရန်</button>
-                        <button onclick="backupData()">💾 Backup Data</button>
-                        <button onclick="restoreData()">📂 Restore Data</button>
-                        <button onclick="deleteAllData()">🗑 Delete All</button>
-                </div>
-        </div>
-
-
-       
-
+                                <div class="setting-btns">
+                                    <button onclick="changePassword()">Change Password</button>
+                                    <button onclick="backupData()">Backup Data</button>
+                                    <button onclick="restoreData()">Restore Data</button>
+                                    <button onclick="deleteAllData()">Delete And Save</button>
+                                    <button onclick="showAbout()">About</button>
+                              </div>
+                            <div class="about inactive">
+                                    <h1>GoldSmith</h1>
+                                    <label>Version: 1.1</label>
+                                    <p>Contact: padecholl@gmail.com</p>
+                                    <p>Copyright &copy; 2026 Developed by Padecholl.</p>
+                            </div>
+                  </div>
 
     <script src="script.js"></script>
 </body>
