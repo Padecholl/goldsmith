@@ -1,21 +1,13 @@
+
 function openPage(id, menu) {
   document.querySelector(".navbar").classList.add("inactive");
-  // Hide all pages
-  document.querySelectorAll(".page").forEach((page) => {
-    page.classList.remove("active");
-  });
-
-  // Show selected page
+  document.querySelectorAll(".page").forEach((page) => page.classList.remove("active"));
   document.getElementById(id).classList.add("active");
-
-  // Remove active from all menu items
-  document.querySelectorAll(".nav-menu li").forEach((item) => {
-    item.classList.remove("active");
-  });
-
-  // Add active to clicked menu
+  document.querySelectorAll(".nav-menu li").forEach((item) => item.classList.remove("active"));
   menu.classList.add("active");
 }
+
+/* ============ Password / Backup / Restore ============ */
 
 if (!localStorage.getItem("password")) {
   localStorage.setItem("password", "1234");
@@ -23,73 +15,46 @@ if (!localStorage.getItem("password")) {
 
 function changePassword() {
   let oldPass = prompt("လက်ရှိ Password");
-
-  let save = localStorage.getItem("password");
-
-  if (oldPass !== save) {
+  if (oldPass !== localStorage.getItem("password")) {
     alert("Password မှားပါတယ်");
-
     return;
   }
-
   let newPass = prompt("Password အသစ်");
-
   if (newPass) {
     localStorage.setItem("password", newPass);
-
     alert("Password ပြောင်းပြီးပါပြီ");
   }
 }
 
 function backupData() {
   let data = {};
-
-  Object.keys(localStorage).forEach((key) => {
-    data[key] = localStorage.getItem(key);
-  });
-
-  let blob = new Blob([JSON.stringify(data, null, 2)], {
-    type: "application/json",
-  });
-
+  Object.keys(localStorage).forEach((key) => (data[key] = localStorage.getItem(key)));
+  let blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
   let a = document.createElement("a");
-
   a.href = URL.createObjectURL(blob);
-
   a.download = "single_backup.json";
-
   a.click();
 }
 
 function restoreData() {
   let input = document.createElement("input");
-
   input.type = "file";
   input.accept = ".json";
-  input.multiple = true; // ✅ File အများကြီးရွေးနိုင်
+  input.multiple = true;
 
   input.onchange = (e) => {
     localStorage.clear();
-
     let files = e.target.files;
-
     if (files.length === 0) return;
 
     let completed = 0;
-
     for (let file of files) {
       let reader = new FileReader();
-
       reader.onload = function () {
         try {
           let data = JSON.parse(reader.result);
-
-          Object.keys(data).forEach((key) => {
-            localStorage.setItem(key, data[key]);
-          });
-
+          Object.keys(data).forEach((key) => localStorage.setItem(key, data[key]));
           completed++;
-
           if (completed === files.length) {
             alert(files.length + " ခုသော Backup File များ Restore ပြီးပါပြီ");
             location.reload();
@@ -98,7 +63,6 @@ function restoreData() {
           alert(file.name + " သည် JSON File မမှန်ပါ။");
         }
       };
-
       reader.readAsText(file);
     }
   };
@@ -106,120 +70,79 @@ function restoreData() {
   input.click();
 }
 
+function timestamp(withTime) {
+  let d = new Date();
+  let s =
+    d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  if (withTime) {
+    s +=
+      " " +
+      String(d.getHours()).padStart(2, "0") +
+      ":" +
+      String(d.getMinutes()).padStart(2, "0") +
+      ":" +
+      String(d.getSeconds()).padStart(2, "0");
+  }
+  return s;
+}
+
 function deleteAllData() {
-  // ===========================
-  // Workers စစ်
-  // ===========================
-  for (let worker of workers) {
-    let key = "goldlists_" + worker.name;
-    let goldData = JSON.parse(localStorage.getItem(key)) || [];
+  const groups = [
+    { list: workers, extra: " မှာ" },
+    { list: shops, extra: " ဆိုင်မှာ" },
+  ];
 
-    if (goldData.length > 0) {
-      alert(
-        worker.name +
-          " မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
-      );
-      return;
+  for (const { list, extra } of groups) {
+    for (const item of list) {
+      let goldData = JSON.parse(localStorage.getItem("goldlists_" + item.name)) || [];
+      if (goldData.length > 0) {
+        alert(
+          item.name +
+            extra +
+            " လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
+        );
+        return;
+      }
     }
   }
 
-  // ===========================
-  // Shops စစ်
-  // ===========================
-  for (let shop of shops) {
-    let key = "goldlists_" + shop.name;
-    let shopData = JSON.parse(localStorage.getItem(key)) || [];
-
-    if (shopData.length > 0) {
-      alert(
-        shop.name +
-          " ဆိုင်မှာ လက်ရှိစာရင်းရှိနေသေးသောကြောင့် ဖျက်၍မရပါ။\nစာရင်းအားလုံးကို Close လုပ်ပြီးမှ ဖျက်နိုင်ပါသည်။",
-      );
-      return;
-    }
-  }
-
-  // ===========================
-  // Password စစ်
-  // ===========================
   let pass = prompt("Password");
-
   if (pass !== localStorage.getItem("password")) {
     alert("Password မှားပါတယ်");
     return;
   }
 
-  // ===========================
-  // Confirm
-  // ===========================
-  if (
-    !confirm("History များကို မဖျက်ခင် Backup သိမ်းပြီး ဖျက်မှာ သေချာပါသလား?")
-  ) {
-    return;
-  }
+  if (!confirm("History များကို မဖျက်ခင် Backup သိမ်းပြီး ဖျက်မှာ သေချာပါသလား?")) return;
 
-  // ===========================
-  // Backup Download
-  // ===========================
   let backup = {};
-
-  Object.keys(localStorage).forEach((key) => {
-    backup[key] = localStorage.getItem(key);
-  });
-
-  let blob = new Blob([JSON.stringify(backup, null, 2)], {
-    type: "application/json",
-  });
-
+  Object.keys(localStorage).forEach((key) => (backup[key] = localStorage.getItem(key)));
+  let blob = new Blob([JSON.stringify(backup, null, 2)], { type: "application/json" });
   let url = URL.createObjectURL(blob);
-
   let a = document.createElement("a");
-
-  let d = new Date();
-
-  let fileName =
-    "Gold_Backup_" +
-    d.getFullYear() +
-    "-" +
-    String(d.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(d.getDate()).padStart(2, "0");
-
-  // +
-  // "_" +
-  // String(d.getHours()).padStart(2, "0") +
-  // "-" +
-  // String(d.getMinutes()).padStart(2, "0") +
-  // "-" +
-  // String(d.getSeconds()).padStart(2, "0") +
-  (".json");
-
   a.href = url;
-  a.download = fileName;
+  a.download = "Gold_Backup_" + timestamp(false) + ".json";
   a.click();
-
   URL.revokeObjectURL(url);
 
-  // ===========================
-  // Delete History
-  // ===========================
   Object.keys(localStorage).forEach((key) => {
     if (key.startsWith("workerHistory_") || key.startsWith("shopHistory_")) {
       localStorage.removeItem(key);
     }
   });
-
-  // Own Gold ဖျက်
   localStorage.removeItem("owngold");
 
   alert("Backup သိမ်းပြီး History များကို ဖျက်ပြီးပါပြီ။");
-
   location.reload();
 }
 
+function showAbout() {
+  document.querySelector(".about").classList.remove("inactive");
+  document.querySelector(".setting-btns").classList.add("inactive");
+}
+/* ============ Shared state & gold-unit helpers ============ */
+
 let workers = JSON.parse(localStorage.getItem("workers")) || [];
 let shops = JSON.parse(localStorage.getItem("shops")) || [];
-
 let editIndex = -1;
 
 const K = 16.58;
@@ -250,23 +173,19 @@ function goldText(g) {
     sign = "-";
     g = Math.abs(g);
   }
-
   let k = Math.floor(g / K);
   let r = g - k * K;
   let p = Math.floor(r / (K / 16));
   r -= p * (K / 16);
   let y = Math.round(r / (K / 128));
-  // ရွေး = 8 ဖြစ်ရင် ပဲတိုး
   if (y >= 8) {
     y = 0;
     p++;
   }
-  // ပဲ = 16 ဖြစ်ရင် ကျပ်တိုး
   if (p >= 16) {
     p = 0;
     k++;
   }
-
   return `
         ${sign}${g.toFixed(3)} g
         <br>
@@ -274,942 +193,726 @@ function goldText(g) {
     `;
 }
 
-// 📱 Mobile = gram, 💻 Desktop = goldText
-const isMobile = window.innerWidth < 768;
+const isMobile = window.innerWidth < 768; // 📱 Mobile = gram, 💻 Desktop = goldText
 
 function displayGold(value) {
   value = Number(value || 0);
-
   if (value === 0) return " ";
-
   return isMobile ? value.toFixed(2) + "g" : goldText(value);
 }
 
+function formatDate(dateStr) {
+  let d = new Date(dateStr.replace(" ", "T"));
+  return d.toLocaleString("en-GB", { day: "numeric", month: "numeric", year: "numeric" });
+}
+
+function clear() {
+  document.querySelectorAll("input").forEach((x) => (x.value = ""));
+}
+
+/* ============ Worker / Shop shared config ============ */
+
+function getList(type) {
+  return type === "worker" ? workers : shops;
+}
+function dataKey(type, index) {
+  return "goldlists_" + getList(type)[index].name;
+}
+function historyKeyOf(type, name) {
+  return (type === "worker" ? "workerHistory_" : "shopHistory_") + name;
+}
+
+function inputGroup(title, prefix, extra) {
+  return `
+    <div class="input-group">
+        <div>${title}</div>
+        <div style="display:flex">
+            <div><input id="${prefix}Gram" placeholder="Gram" oninput="fromGram('${prefix}')" /></div>
+            ${extra || ""}
+        </div>
+        <div class="kpy-div">
+            <div><input id="${prefix}Kyat" placeholder="ကျပ်" oninput="fromGold('${prefix}')" /></div>
+            <div><input id="${prefix}Pae" placeholder="ပဲ" oninput="fromGold('${prefix}')" /></div>
+            <div><input id="${prefix}Yway" placeholder="ရွေး" oninput="fromGold('${prefix}')" /></div>
+        </div>
+    </div>`;
+}
+
+/* ============ Name / Shop registration ============ */
+
 function Save(type) {
-  let input = document.getElementById(
-    type === "worker" ? "name_input" : "shop_input",
-  );
-
+  let input = document.getElementById(type === "worker" ? "name_input" : "shop_input");
   let name = input.value.trim();
-
   if (name === "") return;
 
-  let list = type === "worker" ? workers : shops;
-
-  const exists = list.some(
-    (item) => item.name.toLowerCase() === name.toLowerCase(),
-  );
-
-  if (exists) {
+  let list = getList(type);
+  if (list.some((item) => item.name.toLowerCase() === name.toLowerCase())) {
     alert(`"${name}" already exists.`);
     return;
   }
 
-  list.push({ name: name });
-
-  localStorage.setItem(
-    type === "worker" ? "workers" : "shops",
-    JSON.stringify(list),
-  );
-
+  list.push({ name });
+  localStorage.setItem(type === "worker" ? "workers" : "shops", JSON.stringify(list));
   input.value = "";
   display();
-  
-}
-
-
-const now = new Date();
-
-const closeDate =
-  now.getFullYear() +
-  "-" +
-  String(now.getMonth() + 1).padStart(2, "0") +
-  "-" +
-  String(now.getDate()).padStart(2, "0");
-
-function formatDate(dateStr) {
-  let d = new Date(dateStr.replace(" ", "T"));
-
-  return d.toLocaleString("en-GB", {
-    day: "numeric",
-    month: "numeric",
-    year: "numeric",
-  });
-}
-
-display();
-
-function display() {
-  // Workers
-  let workerHtml = "";
-
-  workers.forEach((item, index) => {
-    workerHtml += `
-        <div class="name-div">
-            <div onclick="workerDetail(${index})" style="width:90%">
-                ${item.name}
-            </div>
-            <div >
-               <button onclick="Delete('worker', ${index})" style="padding: 0 10px;" >🗑</button>
-            </div>
-        </div>
-        `;
-  });
-
-  document.getElementById("name_list").innerHTML = workerHtml;
-
-  // Shops
-  let shopHtml = "";
-  shops.forEach((item, index) => {
-    shopHtml += `
-        <div class="name-div">
-            <div onclick="shopDetail(${index})" style="width:95%">
-                ${item.name}
-            </div>
-
-            <button onclick="Delete('shops', ${index})" style="padding: 0 10px;" >🗑</button>
-
-        </div>
-        `;
-  });
-
-  document.getElementById("shop_list").innerHTML = shopHtml;
 }
 
 function Delete(type, i) {
   if (!confirm("ဖျက်မလား?")) return;
-
-  let password = prompt("Password ရိုက်ထည့်ပါ");
-  let savedPassword = localStorage.getItem("password");
-
-  if (password !== savedPassword) {
+  if (prompt("Password ရိုက်ထည့်ပါ") !== localStorage.getItem("password")) {
     alert("Password မှားနေပါတယ်");
     return;
   }
 
-  // workers / shops ရွေး
-  let list = type === "worker" ? workers : shops;
+  let list = getList(type);
   let name = list[i].name;
-
-  // Array မှဖျက်
   list.splice(i, 1);
+  localStorage.setItem(type === "worker" ? "workers" : "shops", JSON.stringify(list));
 
-  // localStorage update
-  localStorage.setItem(
-    type === "worker" ? "workers" : "shops",
-    JSON.stringify(list),
-  );
-
-  // သက်ဆိုင်တဲ့ storage အားလုံးဖျက်
   Object.keys(localStorage).forEach((key) => {
-    if (key.endsWith("_" + name)) {
-      localStorage.removeItem(key);
-    }
+    if (key.endsWith("_" + name)) localStorage.removeItem(key);
   });
 
   alert("ဖျက်ပြီးပါပြီ");
   display();
 }
 
-function saveWorkersData(index) {
-  if (document.getElementById("workDate").value == "") {
-    alert("နေ့စွဲထည့်ပါ");
-    return;
-  }
+display();
 
-  if (
-    document.getElementById("giveGram").value == "" &&
-    document.getElementById("getGram").value == ""
-  ) {
-    alert("ပေးရွှေ(သို့)အပ်ရွှေ ထည့်ပါ");
-    return;
-  }
+function display() {
+  document.getElementById("name_list").innerHTML = workers
+    .map(
+      (item, index) => `
+        <div class="name-div">
+            <div onclick="workerDetail(${index})" style="width:90%">${item.name}</div>
+            <div><button onclick="Delete('worker', ${index})" style="padding: 0 10px;">🗑</button></div>
+        </div>`,
+    )
+    .join("");
 
-  let goldData =
-    JSON.parse(localStorage.getItem("goldlists_" + workers[index].name)) || [];
-  let dateInput = document.getElementById("workDate").value;
-  let obj = {
-    name: workers[index].name,
-    date: dateInput,
-    give: Number(document.getElementById("giveGram").value) || 0,
-    get: Number(document.getElementById("getGram").value) || 0,
-    types: document.getElementById("types").value,
-    factor: Number(document.getElementById("factorGram").value) || 0,
-    checked: false,
-  };
-
-  if (editIndex === -1) {
-    // အသစ်ထည့်
-    goldData.push(obj);
-  } else {
-    // ပြင်ဆင်
-    goldData[editIndex] = obj;
-    editIndex = -1;
-  }
-
-  localStorage.setItem(
-    "goldlists_" + workers[index].name,
-    JSON.stringify(goldData),
-  );
-  clear();
-  showWorker(index);
+  document.getElementById("shop_list").innerHTML = shops
+    .map(
+      (item, index) => `
+        <div class="name-div">
+            <div onclick="shopDetail(${index})" style="width:95%">${item.name}</div>
+            <button onclick="Delete('shop', ${index})" style="padding: 0 10px;">🗑</button>
+        </div>`,
+    )
+    .join("");
 }
 
-const workerDetail = (index) => {
-  document.querySelector("#name_list").classList.add("inactive");
-  document.querySelector("#w_detail_div").classList.remove("inactive");
+/* ============ Worker / Shop ledger detail page ============ */
 
-  document.querySelectorAll(".second-nav").forEach((nav) => {
-    nav.classList.add("inactive");
-  });
+function openDetail(type, index) {
+  const isWorker = type === "worker";
+  const listSel = isWorker ? "#name_list" : "#shop_list";
+  const detailSel = isWorker ? "#w_detail_div" : "#s_detail_div";
 
-  let html = "";
-  html += `
+  document.querySelector(listSel).classList.add("inactive");
+  document.querySelector(detailSel).classList.remove("inactive");
+  document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.add("inactive"));
+
+  const name = getList(type)[index].name;
+
+  const dateField = isWorker ? `<input id="workDate" type="date"/>` : `နေ့စွဲ<input id="shopDate" type="date"/>`;
+
+  const fieldsHtml = isWorker
+    ? inputGroup("ပေးရွှေ", "give") +
+      inputGroup("အပ်ရွှေ", "get", `<div><input id="types" placeholder="အမျိုးအစား" /></div>`) +
+      inputGroup("အလျော့", "factor")
+    : inputGroup("လက်ခံ", "sget") +
+      inputGroup("ပြန်အပ်", "sgive") +
+      inputGroup("ရလျော့", "getfactor") +
+      inputGroup("ပေးလျော့", "givefactor");
+
+  const tableHead = isWorker
+    ? `<th>☑</th><th>နေ့စွဲ</th><th>ပေးရွှေ</th><th>အပ်ရွှေ</th><th>Type</th><th>လျော့</th><th>ကျန်</th><th>Action</th>`
+    : `<th>☑</th><th>နေ့စွဲ</th><th>လက်ခံ</th><th>ပြန်အပ်</th><th>ရလျော့</th><th>ပေးလျော့</th><th>ကျန်</th><th>Action</th>`;
+
+  const tableId = (isWorker ? "mainTable_" : "mainShopTable_") + index;
+  const saveBtnClass = isWorker ? "res-btn1" : "res-btn1";
+
+  document.querySelector(detailSel).innerHTML = `
       <div class="second-nav">
-        <div class= "icon" onclick="workerBack()" >⬅️</div>
-        
-        <div style="text-align: center;" >${workers[index].name}</div>
-        
-        <div>
-            <input id="workDate" type="date"/>
-        </div>
+        <div class="icon" onclick="${isWorker ? "workerBack()" : "shopBack()"}">⬅️</div>
+        <div style="text-align: center;">${name}</div>
+        <div>${dateField}</div>
       </div>
 
       <div class="main-ctn">
                 <div class="input-group-ctn">
-                    <div class="input-group">
-                        <div>ပေးရွှေ</div>
-                        <div>
-                            <input id="giveGram" placeholder="Gram" oninput="fromGram('give')" />
-                        </div>
-                        <div class="kpy-div">
-                            <div>
-                                <input id="giveKyat" placeholder="ကျပ်" oninput="fromGold('give')" />
-                            </div>
-                            <div>
-                                <input id="givePae" placeholder="ပဲ" oninput="fromGold('give')" />
-                            </div>
-                            <div>
-                                <input id="giveYway" placeholder="ရွေး" oninput="fromGold('give')" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <div>အပ်ရွှေ</div>
-                        
-                        <div style="display:flex">
-                          <div>
-                              <input id="getGram" placeholder="Gram" oninput="fromGram('get')" />
-                          </div>
-                          <div>
-                              <input id="types" placeholder="အမျိုးအစား" />
-                          </div>
-                        </div>
-                        <div class="kpy-div">
-                        
-                            <div>
-                                <input id="getKyat" placeholder="ကျပ်" oninput="fromGold('get')" />
-                            </div>
-                            <div>
-                                <input id="getPae" placeholder="ပဲ" oninput="fromGold('get')" />
-                            </div>
-                            <div>
-                                <input id="getYway" placeholder="ရွေး" oninput="fromGold('get')" />
-                            </div>
-                        </div>
-                        
-                    </div>
-
-                    <div class="input-group">
-                        <div>အလျော့</div>
-                        <div>
-                            <input id="factorGram" placeholder="Gram" oninput="fromGram('factor')" />
-                        </div>
-                        <div class="kpy-div">
-
-                            <div>
-                                <input id="factorKyat" placeholder="ကျပ်" oninput="fromGold('factor')" />
-                            </div>
-                            <div>
-                                <input id="factorPae" placeholder="ပဲ" oninput="fromGold('factor')" />
-                            </div>
-                            <div>
-                                <input id="factorYway" placeholder="ရွေး" oninput="fromGold('factor')" />
-                            </div>
-                        </div>
-                    </div>
+                    ${fieldsHtml}
                 </div>
-                    <div style="width=100%; display:flex; align-item;center; justify-content:center;">
-                        <button class="res-btn1" onclick="saveWorkersData(${index})">SAVE</button>
+                    <div style="display: flex; justify-content: center; margin-top: 5px;">
+                        <button class="${saveBtnClass}" onclick="saveData('${type}', ${index})">SAVE</button>
                     </div>
                         <table>
-                            <tr>
-                                <th>☑</th>
-                                <th>နေ့စွဲ</th>
-                                <th>ပေးရွှေ</th>
-                                <th>အပ်ရွှေ</th>
-                                <th>Type</th>
-                                <th>လျော့</th>
-                                <th>ကျန်</th>
-                                <th>Action</th>
-                             </tr>
-
-                            <tbody id="mainTable_${index}"></tbody>
+                            <tr>${tableHead}</tr>
+                            <tbody id="${tableId}"></tbody>
                         </table>
     </div>
       `;
 
-  document.querySelector("#w_detail_div").innerHTML = html;
-  showWorker(index);
-};
+  renderList(type, index);
+}
 
-function showWorker(index) {
-  let html = "";
-  let goldData =
-    JSON.parse(localStorage.getItem("goldlists_" + workers[index].name)) || [];
+const workerDetail = (index) => openDetail("worker", index);
+const shopDetail = (index) => openDetail("shop", index);
+
+
+
+function saveData(type, index) {
+  const isWorker = type === "worker";
+  const dateId = isWorker ? "workDate" : "shopDate";
+  if (document.getElementById(dateId).value === "") {
+    alert("နေ့စွဲထည့်ပါ");
+    return;
+  }
+
+  const giveId = isWorker ? "giveGram" : "sgiveGram";
+  const getId = isWorker ? "getGram" : "sgetGram";
+  if (document.getElementById(giveId).value === "" && document.getElementById(getId).value === "") {
+    alert("ပေးရွှေ(သို့)အပ်ရွှေ ထည့်ပါ");
+    return;
+  }
+
+  const list = getList(type);
+  const key = dataKey(type, index);
+  let goldData = JSON.parse(localStorage.getItem(key)) || [];
+  const dateInput = document.getElementById(dateId).value;
+
+  let obj;
+  if (isWorker) {
+    obj = {
+      name: list[index].name,
+      date: dateInput,
+      give: Number(document.getElementById("giveGram").value) || 0,
+      get: Number(document.getElementById("getGram").value) || 0,
+      types: document.getElementById("types").value,
+      factor: Number(document.getElementById("factorGram").value) || 0,
+      checked: false,
+    };
+  } else {
+    obj = {
+      shop: list[index].name,
+      date: dateInput,
+      give: Number(document.getElementById("sgiveGram").value) || 0,
+      get: Number(document.getElementById("sgetGram").value) || 0,
+      getfactor: Number(document.getElementById("getfactorGram").value) || 0,
+      givefactor: Number(document.getElementById("givefactorGram").value) || 0,
+      checked: false,
+    };
+  }
+
+  if (editIndex === -1) {
+    goldData.push(obj);
+  } else {
+    goldData[editIndex] = obj;
+    editIndex = -1;
+  }
+
+  localStorage.setItem(key, JSON.stringify(goldData));
+  clear();
+  renderList(type, index);
+}
+
+function renderList(type, index) {
+  const isWorker = type === "worker";
+  const goldData = JSON.parse(localStorage.getItem(dataKey(type, index))) || [];
 
   let balance = 0;
+  let rows = "";
 
   goldData.forEach((x, i) => {
-    balance += Number(x.get || 0);
-    balance -= Number(x.give || 0);
+    if (isWorker) {
+      balance += Number(x.get || 0) - Number(x.give || 0);
+    } else {
+      balance += Number(x.get || 0) + Number(x.getfactor || 0) - Number(x.give || 0) - Number(x.givefactor || 0);
+    }
 
-    html += `
-      <tr>
+    const action = x.checked
+      ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
+      : `<button class="res-btn2" onclick="editData('${type}', ${index}, ${i})">✏️</button>
+         <button class="res-btn2" onclick="deleteData('${type}', ${index}, ${i})">🗑️</button>`;
 
-        <td>
-          <input type="checkbox"
-            ${x.checked ? "checked" : " "}
-            onchange="wtoggleCheck(${index}, ${i})">
-        </td>
+    const checkbox = `<input type="checkbox" ${x.checked ? "checked" : " "} onchange="toggleCheck('${type}', ${index}, ${i})">`;
 
-        <td>${formatDate(x.date)}</td>
+    rows += isWorker
+      ? `<tr>
+          <td>${checkbox}</td>
+          <td>${formatDate(x.date)}</td>
+          <td>${x.give ? displayGold(x.give) : "-"}</td>
+          <td>${x.get ? displayGold(x.get) : "-"}</td>
+          <td>${x.types ? x.types : "-"}</td>
+          <td>${x.factor ? displayGold(x.factor) : "-"}</td>
+          <td>${displayGold(balance)}</td>
+          <td>${action}</td>
+        </tr>`
+      : `<tr>
+          <td>${checkbox}</td>
+          <td>${formatDate(x.date)}</td>
+          <td>${x.get ? displayGold(x.get) : "-"}</td>
+          <td>${x.give ? displayGold(x.give) : "-"}</td>
+          <td>${x.getfactor ? displayGold(x.getfactor) : "-"}</td>
+          <td>${x.givefactor ? displayGold(x.givefactor) : "-"}</td>
+          <td>${displayGold(balance)}</td>
+          <td>${action}</td>
+        </tr>`;
+  });
 
-            <td>${x.give ? displayGold(x.give) : "-"}</td>
+  let give = 0,
+    get = 0,
+    factorA = 0,
+    factorB = 0;
+  goldData.forEach((x) => {
+    give += Number(x.give || 0);
+    get += Number(x.get || 0);
+    if (isWorker) factorA += Number(x.factor || 0);
+    else {
+      factorA += Number(x.getfactor || 0);
+      factorB += Number(x.givefactor || 0);
+    }
+  });
 
-            <td>${x.get ? displayGold(x.get) : "-"}</td>
+  const closeBtn = `<button class="res-btn" onclick="closeList('${type}', ${index})">စာရင်းပိတ်</button>`;
 
-
-        <td>${x.types ? x.types : "-"}</td>
-
-        <td>${x.factor ? displayGold(x.factor) : "-"}</td>
-
+  rows += isWorker
+    ? `<tr style="font-weight:bold;background:#eeee">
+        <td colspan="2">စုစုပေါင်း</td>
+        <td>${displayGold(give)}</td>
+        <td>${displayGold(get)}</td>
+        <td> </td>
+        <td>${displayGold(factorA)}</td>
         <td>${displayGold(balance)}</td>
+        <td>${closeBtn}</td>
+      </tr>`
+    : `<tr style="font-weight:bold;background:#eeee;">
+        <td colspan="2">စုစုပေါင်း</td>
+        <td>${displayGold(get)}</td>
+        <td>${displayGold(give)}</td>
+        <td>${displayGold(factorA)}</td>
+        <td>${displayGold(factorB)}</td>
+        <td>${displayGold(balance)}</td>
+        <td>${closeBtn}</td>
+      </tr>`;
 
-        <td>
-          ${
-            x.checked
-              ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
-              : `
-                <button class="res-btn2" onclick="editData(${index}, ${i})">✏️</button>
-                <button class="res-btn2" onclick="deleteData(${index}, ${i})">🗑️</button>
-              `
-          }
-        </td>
-
-      </tr>
-    `;
-  });
-
-  let g = 0;
-  let t = 0;
-  let f = 0;
-
-  goldData.forEach((x) => {
-    g += Number(x.give || 0);
-    t += Number(x.get || 0);
-    f += Number(x.factor || 0);
-  });
-
-  html += `
-    <tr style="font-weight:bold;background:#eeee">
-
-      <td colspan="2">စုစုပေါင်း</td>
-
-      <td>${displayGold(g)}</td>
-      <td>${displayGold(t)}</td>
-
-      <td> </td>
-
-      <td>${displayGold(f)}</td>
-
-      <td>${displayGold(balance)}</td>
-
-      <td>
-        <button class="res-btn"
-          onclick="closeWorkerList(${index})">
-          စာရင်းပိတ်
-        </button>
-      </td>
-
-    </tr>
-  `;
-
-  document.getElementById("mainTable_" + index).innerHTML = html;
+  document.getElementById((isWorker ? "mainTable_" : "mainShopTable_") + index).innerHTML = rows;
 }
 
-function wtoggleCheck(workerIndex, itemIndex) {
-  let goldData =
-    JSON.parse(
-      localStorage.getItem("goldlists_" + workers[workerIndex].name),
-    ) || [];
-
-  goldData[itemIndex].checked = !goldData[itemIndex].checked;
-  localStorage.setItem(
-    "goldlists_" + workers[workerIndex].name,
-    JSON.stringify(goldData),
-  );
-  showWorker(workerIndex);
+function showWorker(index) {
+  renderList("worker", index);
+}
+function showShop(index) {
+  renderList("shop", index);
 }
 
-function editData(workerIndex, itemIndex) {
-  // document.querySelector(".box").classList.remove("inactive")
-
-  editIndex = itemIndex;
-  let goldData =
-    JSON.parse(
-      localStorage.getItem("goldlists_" + workers[workerIndex].name),
-    ) || [];
-
-  let r = goldData[itemIndex];
-  document.getElementById("types").value = r.types;
-  document.getElementById("factorGram").value = r.factor;
-  fromGram("factor");
-  document.getElementById("workDate").value = r.date;
-  document.getElementById("giveGram").value = r.give;
-  fromGram("give");
-  document.getElementById("getGram").value = r.get;
-  fromGram("get");
+function toggleCheck(type, idx, itemIdx) {
+  const key = dataKey(type, idx);
+  const goldData = JSON.parse(localStorage.getItem(key)) || [];
+  goldData[itemIdx].checked = !goldData[itemIdx].checked;
+  localStorage.setItem(key, JSON.stringify(goldData));
+  renderList(type, idx);
 }
 
-function deleteData(workerIndex, itemIndex) {
-  if (confirm("ဖျက်မလား?")) {
-    let goldData =
-      JSON.parse(
-        localStorage.getItem("goldlists_" + workers[workerIndex].name),
-      ) || [];
-    goldData.splice(itemIndex, 1);
-    localStorage.setItem(
-      "goldlists_" + workers[workerIndex].name,
-      JSON.stringify(goldData),
-    );
-    showWorker(workerIndex);
-  }
-}
-
-function closeWorkerList(index) {
-  let worker = workers[index].name;
-  let key = "goldlists_" + worker;
-  let goldData = JSON.parse(localStorage.getItem(key)) || [];
-
-  if (goldData.length == 0) {
-    alert("စာရင်းမရှိပါ");
-    return;
-  }
-
-  // ✅ Check အားလုံး true ဖြစ်ရမည်
-  let allChecked = goldData.every((item) => item.checked === true);
-
-  if (!allChecked) {
-    alert(
-      "စာရင်းမပိတ်နိုင်သေးပါ!\nRecord အားလုံးကို ✓ Check လုပ်ပြီးမှ ပိတ်နိုင်ပါသည်။",
-    );
-    return;
-  }
-
-  if (!confirm("ဒီစာရင်းကို ပိတ်ပြီး History ထဲသိမ်းမလား?")) return;
-
-  // 🔥 Local Time (close time)
-  let now = new Date();
-
-  let closeDate =
-    now.getFullYear() +
-    "-" +
-    String(now.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(now.getDate()).padStart(2, "0") +
-    " " +
-    String(now.getHours()).padStart(2, "0") +
-    ":" +
-    String(now.getMinutes()).padStart(2, "0") +
-    ":" +
-    String(now.getSeconds()).padStart(2, "0");
-
-  // 🔥 Start Date / End Date
-  let dates = goldData
-    .map((x) => x.date)
-    .filter(Boolean)
-    .sort();
-
-  let startDate = dates[0] || "";
-  let endDate = dates[dates.length - 1] || "";
-
-  let totalGive = 0;
-  let totalGet = 0;
-  let totalFactor = 0;
-
-  goldData.forEach((x) => {
-    totalGive += Number(x.give || 0);
-    totalGet += Number(x.get || 0);
-    totalFactor += Number(x.factor || 0);
-  });
-
-  let historyKey = "workerHistory_" + worker;
-  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
-
-  history.push({
-    worker: worker,
-    closeDate: closeDate,
-    startDate: startDate,
-    endDate: endDate,
-    totalGive: totalGive,
-    totalGet: totalGet,
-    balance: totalGet - totalGive,
-    totalFactor: totalFactor,
-    details: goldData,
-  });
-
-  localStorage.setItem(historyKey, JSON.stringify(history));
-
-  // Clear current list
-  localStorage.setItem(key, JSON.stringify([]));
-
-  alert("စာရင်းပိတ်ပြီး History ထဲသိမ်းပြီးပါပြီ");
-  WorkerHistory();
-  showWorker(index);
-}
-
-function saveShopData(index) {
-  if (document.getElementById("shopDate").value == "") {
-    alert("နေ့စွဲထည့်ပါ");
-    return;
-  }
-
-  if (
-    document.getElementById("sgiveGram").value == "" &&
-    document.getElementById("sgetGram").value == ""
-  ) {
-    alert("ပေးရွှေ(သို့)အပ်ရွှေ ထည့်ပါ");
-    return;
-  }
-
-  let goldData =
-    JSON.parse(localStorage.getItem("goldlists_" + shops[index].name)) || [];
-  let dateInput = document.getElementById("shopDate").value;
-  let obj = {
-    shop: shops[index].name,
-    date: dateInput,
-    give: Number(document.getElementById("sgiveGram").value) || 0,
-    get: Number(document.getElementById("sgetGram").value) || 0,
-    getfactor: Number(document.getElementById("getfactorGram").value) || 0,
-    givefactor: Number(document.getElementById("givefactorGram").value) || 0,
-    checked: false,
-  };
-
-  if (editIndex === -1) {
-    // အသစ်ထည့်
-    goldData.push(obj);
-  } else {
-    // ပြင်ဆင်
-    goldData[editIndex] = obj;
-    editIndex = -1;
-  }
-
-  localStorage.setItem(
-    "goldlists_" + shops[index].name,
-    JSON.stringify(goldData),
-  );
-  clear();
-  showShop(index);
-}
-
-const shopDetail = (index) => {
-  document.getElementById("shop_list").classList.add("inactive");
-  document.querySelector("#s_detail_div").classList.remove("inactive");
-
-  document.querySelectorAll(".second-nav").forEach((nav) => {
-    nav.classList.add("inactive");
-  });
-
-  let html = "";
-  html += `
-      <div class="second-nav" >
-        <div onclick="shopBack()" class="icon">
-            ⬅️
-        </div>
-        
-        <div style="text-align: center;" >${shops[index].name}</div>
-        
-        <div>
-            နေ့စွဲ<input id="shopDate" type="date"/>
-        </div>
-      </div>
-
-      <div class="main-ctn">
-      
-                <div class="input-group-ctn">
-
-                   <div class="input-group">
-                        <div>လက်ခံ</div>
-
-                        <div>
-                            <input id="sgetGram" placeholder="Gram" oninput="fromGram('sget')" />
-                        </div>
-                        <div class="kpy-div">
-                        
-                            <div>
-                                <input id="sgetKyat" placeholder="ကျပ်" oninput="fromGold('sget')" />
-                            </div>
-                            <div>
-                                <input id="sgetPae" placeholder="ပဲ" oninput="fromGold('sget')" />
-                            </div>
-                            <div>
-                                <input id="sgetYway" placeholder="ရွေး" oninput="fromGold('sget')" />
-                            </div>
-                        </div>
-
-                    </div>
-                    
-                    <div class="input-group">
-                        <div>ပြန်အပ်</div>
-
-                        <div>
-                            <input id="sgiveGram" placeholder="Gram" oninput="fromGram('sgive')" />
-                        </div>
-                        <div class="kpy-div">
-                            <div>
-                                <input id="sgiveKyat" placeholder="ကျပ်" oninput="fromGold('sgive')" />
-                            </div>
-                            <div>
-                                <input id="sgivePae" placeholder="ပဲ" oninput="fromGold('sgive')" />
-                            </div>
-                            <div>
-                                <input id="sgiveYway" placeholder="ရွေး" oninput="fromGold('sgive')" />
-                            </div>
-                        </div>
-                    </div>
-
-                    
-
-                    <div class="input-group">
-                        <div>ရလျော့</div>
-                        <div>
-                            <input id="getfactorGram" placeholder="Gram" oninput="fromGram('getfactor')" />
-                        </div>
-                        <div class="kpy-div">
-
-                            <div>
-                                <input id="getfactorKyat" placeholder="ကျပ်" oninput="fromGold('getfactor')" />
-                            </div>
-                            <div>
-                                <input id="getfactorPae" placeholder="ပဲ" oninput="fromGold('getfactor')" />
-                            </div>
-                            <div>
-                                <input id="getfactorYway" placeholder="ရွေး" oninput="fromGold('getfactor')" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <div>ပေးလျော့</div>
-                            <div>
-                                <input id="givefactorGram" placeholder="Gram" oninput="fromGram('givefactor')" />
-                            </div>
-                            
-                            <div class="kpy-div">
-
-                                    <div>
-                                        <input id="givefactorKyat" placeholder="ကျပ်" oninput="fromGold('givefactor')" />
-                                    </div>
-                                    <div>
-                                        <input id="givefactorPae" placeholder="ပဲ" oninput="fromGold('givefactor')" />
-                                    </div>
-                                    <div>
-                                        <input id="givefactorYway" placeholder="ရွေး" oninput="fromGold('givefactor')" />
-                                    </div>
-                            </div>
-
-                        </div>
-                  </div> 
-                            <div style="width=100%; display:flex; align-item;center; justify-content:center;">
-                                <button class="res-btn1" onclick="saveShopData(${index})">SAVE</button>
-                            </div>
-            
-                        <table>
-                            <tr style="background-color:#eeee">
-                                <th>☑</th>
-                                <th>နေ့စွဲ</th>
-                                <th>လက်ခံ</th>
-                                <th>ပြန်အပ်</th>
-                                <th>ရလျော့</th>
-                                <th>ပေးလျော့</th>
-                                <th>ကျန်</th>
-                                <th>Action</th>
-                             </tr>
-
-                            <tbody id="mainShopTable_${index}"></tbody>
-                        </table>
-
-    </div>
-      `;
-  document.querySelector("#s_detail_div").innerHTML = html;
-  showShop(index);
+const EDIT_FIELD_MAP = {
+  worker: { give: "give", get: "get", factor: "factor" },
+  shop: { sget: "get", sgive: "give", getfactor: "getfactor", givefactor: "givefactor" },
 };
 
-function showShop(index) {
-  let html = "";
-  let goldData =
-    JSON.parse(localStorage.getItem("goldlists_" + shops[index].name)) || [];
+function editData(type, idx, itemIdx) {
+  editIndex = itemIdx;
+  const r = (JSON.parse(localStorage.getItem(dataKey(type, idx))) || [])[itemIdx];
 
-  let balance = 0; // Running Balance
-
-  goldData.forEach((x, i) => {
-    balance += Number(x.get || 0);
-    balance += Number(x.getfactor || 0);
-
-    balance -= Number(x.give || 0);
-    balance -= Number(x.givefactor || 0);
-
-    html += `
-        <tr>
-            <td><input type="checkbox"
-                ${x.checked ? "checked" : " "}
-                onchange="toggleCheck(${index}, ${i})"></td>
-
-            <td>${formatDate(x.date)}</td>
-
-            <td>${x.get ? displayGold(x.get) : "-"}</td>
-            <td>${x.give ? displayGold(x.give) : "-"}</td>
-            
-            <td>${x.getfactor ? displayGold(x.getfactor) : "-"}</td>
-            <td>${x.givefactor ? displayGold(x.givefactor) : "-"}</td>
-            <!-- လက်ကျန်ရွှေ -->
-            <td>${displayGold(balance)}</td>
-
-            <td>
-                ${
-                  x.checked
-                    ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
-                    : `
-                        <button class="res-btn2" onclick="editShopData(${index}, ${i})">✏️</button>
-                        <button class="res-btn2" onclick="deleteShopData(${index}, ${i})">🗑️</button>
-                    `
-                }
-            </td>
-        </tr>
-        `;
+  Object.entries(EDIT_FIELD_MAP[type]).forEach(([inputPrefix, field]) => {
+    document.getElementById(inputPrefix + "Gram").value = r[field];
+    fromGram(inputPrefix);
   });
 
-  let g = 0,
-    t = 0,
-    f = 0,
-    c = 0,
-    o = 0;
-
-  goldData.forEach((x) => {
-    g += Number(x.give || 0);
-    t += Number(x.get || 0);
-    f += Number(x.getfactor || 0);
-    c += Number(x.givefactor || 0);
-    o += Number(x.own || 0);
-  });
-
-  html += `
-    <tr style="font-weight:bold;background:#eeee;">
-        
-        <td colspan="2">စုစုပေါင်း</td>
-        <td>${displayGold(t)}</td>
-        <td>${displayGold(g)}</td>
-        <td>${displayGold(f)}</td>
-        <td>${displayGold(c)}</td>
-        <td>${displayGold(balance)}</td>
-        <td><button class="res-btn" onclick="closeShopList(${index})">
-          စာရင်းပိတ်
-    </button></td>
-    </tr>
-    `;
-
-  document.getElementById("mainShopTable_" + index).innerHTML = html;
-}
-
-function toggleCheck(shopIndex, itemIndex) {
-  let goldData =
-    JSON.parse(localStorage.getItem("goldlists_" + shops[shopIndex].name)) ||
-    [];
-
-  goldData[itemIndex].checked = !goldData[itemIndex].checked;
-  localStorage.setItem(
-    "goldlists_" + shops[shopIndex].name,
-    JSON.stringify(goldData),
-  );
-  showShop(shopIndex);
-}
-
-function editShopData(workerIndex, itemIndex) {
-  editIndex = itemIndex;
-  let goldData =
-    JSON.parse(localStorage.getItem("goldlists_" + shops[workerIndex].name)) ||
-    [];
-
-  let r = goldData[itemIndex];
-  document.getElementById("getfactorGram").value = r.getfactor;
-  fromGram("getfactor");
-  document.getElementById("shopDate").value = r.date;
-  document.getElementById("sgiveGram").value = r.give;
-  fromGram("sgive");
-  document.getElementById("sgetGram").value = r.get;
-  fromGram("sget");
-  document.getElementById("givefactorGram").value = r.givefactor;
-  fromGram("givefactor");
-}
-
-function deleteShopData(workerIndex, itemIndex) {
-  if (confirm("ဖျက်မလား?")) {
-    let goldData =
-      JSON.parse(
-        localStorage.getItem("goldlists_" + shops[workerIndex].name),
-      ) || [];
-    goldData.splice(itemIndex, 1);
-    localStorage.setItem(
-      "goldlists_" + shops[workerIndex].name,
-      JSON.stringify(goldData),
-    );
-    showShop(workerIndex);
+  if (type === "worker") {
+    document.getElementById("types").value = r.types;
+    document.getElementById("workDate").value = r.date;
+  } else {
+    document.getElementById("shopDate").value = r.date;
   }
 }
 
-function closeShopList(index) {
-  let name = shops[index].name;
-  let key = "goldlists_" + name;
-  let goldData = JSON.parse(localStorage.getItem(key)) || [];
+function deleteData(type, idx, itemIdx) {
+  if (!confirm("ဖျက်မလား?")) return;
+  const key = dataKey(type, idx);
+  const goldData = JSON.parse(localStorage.getItem(key)) || [];
+  goldData.splice(itemIdx, 1);
+  localStorage.setItem(key, JSON.stringify(goldData));
+  renderList(type, idx);
+}
+
+function closeList(type, index) {
+  const isWorker = type === "worker";
+  const name = getList(type)[index].name;
+  const key = dataKey(type, index);
+  const goldData = JSON.parse(localStorage.getItem(key)) || [];
 
   if (goldData.length == 0) {
     alert("စာရင်းမရှိပါ");
     return;
   }
-
-  // ✅ Check အားလုံး true ဖြစ်ရမည်
-  let allChecked = goldData.every((item) => item.checked === true);
-
-  if (!allChecked) {
-    alert(
-      "စာရင်းမပိတ်နိုင်သေးပါ!\nRecord အားလုံးကို ✓ Check လုပ်ပြီးမှ ပိတ်နိုင်ပါသည်။",
-    );
+  if (!goldData.every((item) => item.checked === true)) {
+    alert("စာရင်းမပိတ်နိုင်သေးပါ!\nRecord အားလုံးကို ✓ Check လုပ်ပြီးမှ ပိတ်နိုင်ပါသည်။");
     return;
   }
-
   if (!confirm("ဒီစာရင်းကို ပိတ်ပြီး History ထဲသိမ်းမလား?")) return;
 
-  // 🔥 Local Time (close time)
-  let now = new Date();
+  const closeDate = timestamp(true);
+  const dates = goldData.map((x) => x.date).filter(Boolean).sort();
+  const startDate = dates[0] || "";
+  const endDate = dates[dates.length - 1] || "";
 
-  let closeDate =
-    now.getFullYear() +
-    "-" +
-    String(now.getMonth() + 1).padStart(2, "0") +
-    "-" +
-    String(now.getDate()).padStart(2, "0") +
-    " " +
-    String(now.getHours()).padStart(2, "0") +
-    ":" +
-    String(now.getMinutes()).padStart(2, "0") +
-    ":" +
-    String(now.getSeconds()).padStart(2, "0");
+  let totalGive = 0,
+    totalGet = 0;
+  let entry;
 
-  // 🔥 Start Date / End Date (from details)
-  let dates = goldData
-    .map((x) => x.date)
-    .filter(Boolean)
-    .sort();
+  if (isWorker) {
+    let totalFactor = 0;
+    goldData.forEach((x) => {
+      totalGive += Number(x.give || 0);
+      totalGet += Number(x.get || 0);
+      totalFactor += Number(x.factor || 0);
+    });
+    entry = {
+      worker: name,
+      closeDate,
+      startDate,
+      endDate,
+      totalGive,
+      totalGet,
+      balance: totalGet - totalGive,
+      totalFactor,
+      details: goldData,
+    };
+  } else {
+    let totalGetFactor = 0,
+      totalGiveFactor = 0;
+    goldData.forEach((x) => {
+      totalGive += Number(x.give || 0);
+      totalGet += Number(x.get || 0);
+      totalGetFactor += Number(x.getfactor || 0);
+      totalGiveFactor += Number(x.givefactor || 0);
+    });
+    entry = {
+      name,
+      closeDate,
+      startDate,
+      endDate,
+      totalGive,
+      totalGet,
+      balance: totalGet + totalGetFactor - (totalGive + totalGiveFactor),
+      totalGetFactor,
+      totalGiveFactor,
+      details: goldData,
+    };
+  }
 
-  let startDate = dates[0] || "";
-  let endDate = dates[dates.length - 1] || "";
-
-  let totalGive = 0;
-  let totalGet = 0;
-  let totalGetFactor = 0;
-  let totalGiveFactor = 0;
-
-  goldData.forEach((x) => {
-    totalGive += Number(x.give || 0);
-    totalGet += Number(x.get || 0);
-    totalGetFactor += Number(x.getfactor || 0);
-    totalGiveFactor += Number(x.givefactor || 0);
-  });
-
-  let historyKey = "shopHistory_" + name;
-
-  let history = JSON.parse(localStorage.getItem(historyKey)) || [];
-
-  history.push({
-    name: name,
-    closeDate: closeDate,
-
-    // ⭐ NEW FIELDS
-    startDate: startDate,
-    endDate: endDate,
-    totalGive: totalGive,
-    totalGet: totalGet,
-    balance: totalGet + totalGetFactor - (totalGive + totalGiveFactor),
-    totalGetFactor: totalGetFactor,
-    totalGiveFactor: totalGiveFactor,
-    details: goldData,
-  });
-
+  const historyKey = historyKeyOf(type, name);
+  const history = JSON.parse(localStorage.getItem(historyKey)) || [];
+  history.push(entry);
   localStorage.setItem(historyKey, JSON.stringify(history));
-
-  // clear current list
   localStorage.setItem(key, JSON.stringify([]));
 
   alert("စာရင်းပိတ်ပြီး History ထဲသိမ်းပြီးပါပြီ");
-  showShop(index);
+  renderList(type, index);
 }
+
+/* ============ History modal (view a closed period) ============ */
+
+function historyView(type, name, idx) {
+  const isWorker = type === "worker";
+  const history = JSON.parse(localStorage.getItem(historyKeyOf(type, name))) || [];
+  const data = history[idx];
+  if (!data) {
+    alert("History not found!");
+    return;
+  }
+
+  const details = data.details || [];
+  let rows = "";
+  let balance = 0;
+  let totalGive = 0,
+    totalGet = 0,
+    totalFactor = 0,
+    totalGetFactor = 0,
+    totalGiveFactor = 0;
+
+  details.forEach((x) => {
+    const give = Number(x.give || 0);
+    const get = Number(x.get || 0);
+    totalGive += give;
+    totalGet += get;
+
+    if (isWorker) {
+      const factor = Number(x.factor || 0);
+      totalFactor += factor;
+      balance += get - give;
+      rows += `
+        <tr>
+          <td>${formatDate(x.date)}</td>
+          <td>${give ? displayGold(give) : "0"}</td>
+          <td>${get ? displayGold(get) : "0"}</td>
+          <td>${x.types || "-"}</td>
+          <td>${balance ? displayGold(balance) : "0"}</td>
+          <td>${factor ? displayGold(factor) : "0"}</td>
+        </tr>`;
+    } else {
+      const getFactor = Number(x.getfactor || 0);
+      const giveFactor = Number(x.givefactor || 0);
+      totalGetFactor += getFactor;
+      totalGiveFactor += giveFactor;
+      balance += get + getFactor - (give + giveFactor);
+      rows += `
+        <tr>
+          <td>${formatDate(x.date)}</td>
+          <td>${get ? displayGold(get) : "0"}</td>
+          <td>${give ? displayGold(give) : "0"}</td>
+          <td>${getFactor ? displayGold(getFactor) : "0"}</td>
+          <td>${giveFactor ? displayGold(giveFactor) : "0"}</td>
+          <td>${balance ? displayGold(balance) : "0"}</td>
+        </tr>`;
+    }
+  });
+
+  const dateRange = `${formatDate(data.startDate)} မှ ${formatDate(data.endDate)} အထိ`;
+
+  if (isWorker) {
+    rows += `
+      <tr style="background:#eee;font-weight:bold">
+        <td>Total</td>
+        <td>${totalGive ? displayGold(totalGive) : "0"}</td>
+        <td>${totalGet ? displayGold(totalGet) : "0"}</td>
+        <td>-</td>
+        <td>${totalGet - totalGive ? displayGold(totalGet - totalGive) : "0"}</td>
+        <td>${totalFactor ? displayGold(totalFactor) : "0"}</td>
+      </tr>`;
+    document.getElementById("historyDateRange").innerHTML = dateRange;
+    document.getElementById("historyWorkerName").innerHTML = name;
+    document.getElementById("historyDetails").innerHTML = rows;
+    document.getElementById("workerModal").style.display = "block";
+  } else {
+    const totalBalance = totalGet + totalGetFactor - (totalGive + totalGiveFactor);
+    rows += `
+      <tr style="background:#eee;font-weight:bold">
+        <td>Total</td>
+        <td>${totalGet ? displayGold(totalGet) : "0"}</td>
+        <td>${totalGive ? displayGold(totalGive) : "0"}</td>
+        <td>${totalGetFactor ? displayGold(totalGetFactor) : "0"}</td>
+        <td>${totalGiveFactor ? displayGold(totalGiveFactor) : "0"}</td>
+        <td>${totalBalance ? displayGold(totalBalance) : "0"}</td>
+      </tr>`;
+    document.getElementById("shopDateRange").innerHTML = dateRange;
+    document.getElementById("historyShopName").innerHTML = name;
+    document.getElementById("shopDetails").innerHTML = rows;
+    document.getElementById("shopModal").style.display = "block";
+  }
+}
+
+function workerView(name, idx) {
+  historyView("worker", name, idx);
+}
+function shopView(name, idx) {
+  historyView("shop", name, idx);
+}
+
+function closeModal() {
+  document.getElementById("workerModal").style.display = "none";
+  document.getElementById("shopModal").style.display = "none";
+}
+
+/* ============ History list pages ============ */
+
+nameForHistory();
+
+function nameForHistory() {
+  document.getElementById("name_h_div").innerHTML = workers
+    .map(
+      (item) => `
+        <div class="his-name-div">
+            <div onclick="WorkerHistory('${item.name}')" style="width:100%">${item.name}</div>
+        </div>`,
+    )
+    .join("");
+
+  document.getElementById("shop_h_div").innerHTML = shops
+    .map(
+      (item) => `
+        <div class="his-shop-div">
+            <div onclick="ShopHistory('${item.name}')" style="width:100%">${item.name}</div>
+        </div>`,
+    )
+    .join("");
+}
+
+function showHistory(type, name) {
+  const isWorker = type === "worker";
+  document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.add("inactive"));
+ 
+  if (isWorker) {
+    document.querySelector(".h-w-table").classList.remove("inactive");
+  } else {
+    document.querySelector(".h-s-table").classList.remove("inactive");
+  }
+
+  const history = JSON.parse(localStorage.getItem(historyKeyOf(type, name))) || [];
+
+  let rows = "";
+  let totalGive = 0,
+    totalGet = 0,
+    totalBalance = 0,
+    totalFactor = 0,
+    totalGetFactor = 0,
+    totalGiveFactor = 0;
+
+  history.forEach((x, i) => {
+    totalGive += Number(x.totalGive || 0);
+    totalGet += Number(x.totalGet || 0);
+    totalBalance += Number(x.balance || 0);
+
+    if (isWorker) {
+      totalFactor += Number(x.totalFactor || 0);
+      rows += `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${formatDate(x.closeDate)}</td>
+          <td>${x.totalGive ? displayGold(x.totalGive) : "0"}</td>
+          <td>${x.totalGet ? displayGold(x.totalGet) : "0"}</td>
+          <td>${x.balance ? displayGold(x.balance) : "0"}</td>
+          <td>${x.totalFactor ? displayGold(x.totalFactor) : "0"}</td>
+          <td><button class="res-btn2" onclick="workerView('${name}', ${i})">View</button></td>
+        </tr>`;
+    } else {
+      totalGetFactor += Number(x.totalGetFactor || 0);
+      totalGiveFactor += Number(x.totalGiveFactor || 0);
+      rows += `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${formatDate(x.closeDate)}</td>
+          <td>${x.totalGet ? displayGold(x.totalGet) : "0"}</td>
+          <td>${x.totalGive ? displayGold(x.totalGive) : "0"}</td>
+          <td>${x.totalGetFactor ? displayGold(x.totalGetFactor) : "0"}</td>
+          <td>${x.totalGiveFactor ? displayGold(x.totalGiveFactor) : "0"}</td>
+          <td>${x.balance ? displayGold(x.balance) : "0"}</td>
+          <td><button class="res-btn2" onclick="shopView('${name}', ${i})">View</button></td>
+        </tr>`;
+    }
+  });
+
+  const head = isWorker
+    ? `<th>No</th><th>ပိတ်ရက်</th><th>ပေး</th><th>အပ်</th><th>ကျန်</th><th>လျော့</th><th>Action</th>`
+    : `<th>No</th><th>ပိတ်ရက်</th><th>ရ</th><th>ပေး</th><th>ရလျော့</th><th>ပေးလျော့</th><th>ကျန်</th><th>Action</th>`;
+
+  const foot = isWorker
+    ? `<th colspan="2">စုစုပေါင်း</th>
+       <th>${totalGive ? displayGold(totalGive) : "0"}</th>
+       <th>${totalGet ? displayGold(totalGet) : "0"}</th>
+       <th>${totalBalance ? displayGold(totalBalance) : "0"}</th>
+       <th>${totalFactor ? displayGold(totalFactor) : "0"}</th>
+       <th></th>`
+    : `<th colspan="2">စုစုပေါင်း</th>
+       <th>${totalGet ? displayGold(totalGet) : "0"}</th>
+       <th>${totalGive ? displayGold(totalGive) : "0"}</th>
+       <th>${totalGetFactor ? displayGold(totalGetFactor) : "0"}</th>
+       <th>${totalGiveFactor ? displayGold(totalGiveFactor) : "0"}</th>
+       <th>${totalBalance ? displayGold(totalBalance) : "0"}</th>
+       <th></th>`;
+
+  document.getElementById(isWorker ? "mainHWorkerTable" : "mainHShopTable").innerHTML = `
+      <div class="second-nav">
+        <div onclick="reBack()" class="icon">🏠</div>
+        <div style="text-align: center;">${name}</div>
+        <div class="icon" onclick="${isWorker ? "WhBack()" : "ShBack()"}">⬅️</div>
+      </div>
+
+        <table border="1">
+            <thead><tr>${head}</tr></thead>
+            <tbody>${rows}</tbody>
+            <tfoot><tr>${foot}</tr></tfoot>
+        </table>
+    `;
+}
+
+function WorkerHistory(name) {
+  showHistory("worker", name);
+}
+function ShopHistory(name) {
+  showHistory("shop", name);
+}
+
+function Back() {
+  document.querySelector(".navbar").classList.remove("inactive");
+  document.querySelectorAll(".page").forEach((page) => page.classList.remove("active"));
+}
+
+function reBack() {
+  location.reload();
+  // document.querySelector(".navbar").classList.remove("inactive");
+  // document.querySelectorAll(".page").forEach((page) => page.classList.remove("active"));
+  // document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
+}
+
+function workerBack() {
+  document.querySelector("#w_detail_div").classList.add("inactive");
+  document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
+}
+
+function shopBack() {
+  document.querySelector("#s_detail_div").classList.add("inactive");
+  document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
+}
+
+function WhBack() {
+  document.querySelector(".h-w-table").classList.add("inactive");
+  document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
+}
+function ShBack() {
+  document.querySelector(".h-s-table").classList.add("inactive");
+  document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
+}
+
+function Setting() {
+  document.querySelector(".about").classList.add("inactive");
+  document.querySelector(".setting-btns").classList.remove("inactive");
+}
+
+/* ============ Final summary (all workers + shops + own gold) ============ */
 
 finalResult();
 
 function finalResult() {
-  let html = "";
+  let rows = "";
+  let totalGive = 0,
+    totalGet = 0,
+    totalFactor = 0,
+    totalGetFactor = 0,
+    totalGiveFactor = 0,
+    totalBalance = 0,
+    totalOwnGold = 0;
 
-  let totalGive = 0;
-  let totalGet = 0;
-  let totalFactor = 0;
-  let totalGetFactor = 0;
-  let totalGiveFactor = 0;
-  let totalBalance = 0;
-  let totalOwnGold = 0;
-
-  let no = 1;
-
-  let ownGold = JSON.parse(localStorage.getItem("owngold")) || [];
-
-  ownGold.forEach((item) => {
-    totalOwnGold += Number(item.own || 0);
-  });
+  const ownGold = JSON.parse(localStorage.getItem("owngold")) || [];
+  ownGold.forEach((item) => (totalOwnGold += Number(item.own || 0)));
 
   Object.keys(localStorage).forEach((key) => {
-    if (!key.startsWith("workerHistory_") && !key.startsWith("shopHistory_"))
-      return;
+    if (!key.startsWith("workerHistory_") && !key.startsWith("shopHistory_")) return;
 
-    let history = JSON.parse(localStorage.getItem(key)) || [];
+    const history = JSON.parse(localStorage.getItem(key)) || [];
 
     history.forEach((item) => {
-      // Worker => totalFactor
-      // Shop => totalGetFactor
-      let getFactor = item.totalGetFactor ?? 0;
+      const getFactor = item.totalGetFactor ?? 0; // Worker => totalFactor, Shop => totalGetFactor
+      const giveFactor = item.totalGiveFactor ?? 0; // Worker has no giveFactor
+      const factor = item.totalFactor ?? 0;
 
-      // Worker မှာ GiveFactor မရှိ
-      let giveFactor = item.totalGiveFactor ?? 0;
-
-      let Factor = item.totalFactor ?? 0;
-
-      html += `
+      rows += `
             <tr>
             <td>${item.worker || item.name}</td>
                 <td></td>
                 <td>${item.totalGet ? displayGold(item.totalGet) : "-"}</td>
                 <td>${item.totalGive ? displayGold(item.totalGive) : "-"}</td>
-                <td>${Factor ? displayGold(Factor) : "-"}</td>
+                <td>${factor ? displayGold(factor) : "-"}</td>
                 <td>${getFactor ? displayGold(getFactor) : "-"}</td>
                 <td>${giveFactor ? displayGold(giveFactor) : "-"}</td>
                 <td>${item.balance ? displayGold(item.balance) : "-"}</td>
@@ -1218,19 +921,17 @@ function finalResult() {
 
       totalGive += Number(item.totalGive || 0);
       totalGet += Number(item.totalGet || 0);
-      totalFactor += Number(Factor);
+      totalFactor += Number(factor);
       totalGetFactor += Number(getFactor);
       totalGiveFactor += Number(giveFactor);
       totalBalance += Number(item.balance || 0);
     });
   });
 
-  let finalBalance =
-    totalGet + totalGetFactor - (totalGive + totalGiveFactor) - totalOwnGold;
-  document.getElementById("final_history").innerHTML = html;
+  const finalBalance = totalGet + totalGetFactor - (totalGive + totalGiveFactor) - totalOwnGold;
+  document.getElementById("final_history").innerHTML = rows;
 
   document.getElementById("historyFoot").innerHTML = `
-        
         <tr style="font-weight:bold;background:#eeee;">
             <td colspan="1">စုစုပေါင်း</td>
             <td>${displayGold(totalOwnGold)}</td>
@@ -1244,373 +945,12 @@ function finalResult() {
     `;
 }
 
-nameForHistory();
-
-function nameForHistory() {
-  // Workers
-  let workerHtml = "";
-
-  workers.forEach((item) => {
-    workerHtml += `
-        <div class="his-name-div" >
-
-            <div onclick="WorkerHistory('${item.name}')" style="width:100%" >
-                ${item.name}
-            </div>
-
-        </div>
-        `;
-  });
-
-  document.getElementById("name_h_div").innerHTML = workerHtml;
-
-  // Shops
-  let shopHtml = "";
-
-  shops.forEach((item) => {
-    shopHtml += `
-        <div class="his-shop-div">
-
-                <div onclick="ShopHistory('${item.name}')" style="width:100%">
-                    ${item.name}
-                </div>
-
-        </div>
-        `;
-  });
-
-  document.getElementById("shop_h_div").innerHTML = shopHtml;
-}
-
-function WorkerHistory(workerName) {
-  document.querySelector("#name_h_div").classList.add("inactive");
-  document.querySelector(".h-w-table").classList.remove("inactive");
-  document.querySelectorAll(".second-nav").forEach((nav) => {
-    nav.classList.add("inactive");
-  });
-
-  let history =
-    JSON.parse(localStorage.getItem("workerHistory_" + workerName)) || [];
-
-  let html = "";
-
-  let totalGive = 0;
-  let totalGet = 0;
-  let totalFactor = 0;
-  let totalBalance = 0;
-
-  history.forEach((x, i) => {
-    totalGive += Number(x.totalGive || 0);
-    totalGet += Number(x.totalGet || 0);
-    totalFactor += Number(x.totalFactor || 0);
-    totalBalance += Number(x.balance || 0);
-
-    html += `
-            <tr>
-                <td>${i + 1}</td>
-                <td>${formatDate(x.closeDate)}</td>
-                <td>${x.totalGive ? displayGold(x.totalGive) : "-"}</td>
-                <td>${x.totalGet ? displayGold(x.totalGet) : "-"}</td>
-                <td>${x.balance ? displayGold(x.balance) : "-"}</td>
-                <td>${x.totalFactor ? displayGold(x.totalFactor) : "-"}</td>
-                <td>
-                    <button class="res-btn2" onclick="workerView('${workerName}', ${i})">
-                        View
-                    </button>
-                </td>
-            </tr>
-        `;
-  });
-
-  document.getElementById("mainHWorkerTable").innerHTML = `
-      <div class="second-nav">
-        <div onclick="Back()" class="icon"></div>
-        
-        <div style="text-align: center;" >${workerName}</div>
-
-        <div class="icon"  onclick="WhBack()">⬅️</div>
-
-        
-      </div>
-
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>ပိတ်ရက်</th>
-                    <th>ပေး</th>
-                    <th>အပ်</th>
-                    <th>ကျန်</th>
-                    <th>လျော့</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                ${html}
-            </tbody>
-
-            <tfoot>
-                <tr>
-                    <th colspan="2">စုစုပေါင်း</th>
-                    <th>${totalGive ? displayGold(totalGive) : "-"}</th>
-                    <th>${totalGet ? displayGold(totalGet) : "-"}</th>
-                    <th>${totalBalance ? displayGold(totalBalance) : "-"}</th>
-                    <th>${totalFactor ? displayGold(totalFactor) : "-"}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
-    `;
-}
-
-function ShopHistory(shopName) {
-  document.querySelector(".h-s-table").classList.remove("inactive");
-  document.querySelector("#shop_h_div").classList.add("inactive");
-  document.querySelectorAll(".second-nav").forEach((nav) => {
-    nav.classList.add("inactive");
-  });
-
-  let history =
-    JSON.parse(localStorage.getItem("shopHistory_" + shopName)) || [];
-
-  let html = "";
-
-  let totalGive = 0;
-  let totalGet = 0;
-  let totalBalance = 0;
-  let totalGiveFactor = 0;
-  let totalGetFactor = 0;
-
-  history.forEach((x, i) => {
-    totalGive += Number(x.totalGive || 0);
-    totalGet += Number(x.totalGet || 0);
-    totalBalance += Number(x.balance || 0);
-
-    totalGiveFactor += Number(x.totalGiveFactor || 0);
-    totalGetFactor += Number(x.totalGetFactor || 0);
-
-    html += `
-            <tr>
-                <td>${i + 1}</td>
-                <td>${formatDate(x.closeDate)}</td>
-                <td>${x.totalGet ? displayGold(x.totalGet) : "-"}</td>
-                <td>${x.totalGive ? displayGold(x.totalGive) : "-"}</td>
-                <td>${x.totalGetFactor ? displayGold(x.totalGetFactor) : "-"}</td>
-                <td>${x.totalGiveFactor ? displayGold(x.totalGiveFactor) : "-"}</td>
-                <td>${x.balance ? displayGold(x.balance) : "-"}</td>
-                <td>
-                    <button class="res-btn2" onclick="shopView('${shopName}', ${i})">
-    View
-</button>
-                </td>
-            </tr>
-        `;
-  });
-  // 🏠
-  document.getElementById("mainHShopTable").innerHTML = `
-    <div class="second-nav">
-       <div onclick="Back()" class="icon"></div>
-
-       <div style="text-align: center;" >${shopName}</div>
-
-        <div class="icon" onclick="ShBack()">⬅️</div>
-
-        
-        
-      </div>
-
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>No</th>
-                    <th>ပိတ်ရက်</th>
-                    <th>ရ</th>
-                    <th>ပေး</th>
-                    <th>ရလျော့</th>
-                    <th>ပေးလျော့</th>
-                    <th>ကျန်</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                ${html}
-            </tbody>
-
-            <tfoot>
-                <tr style="background:#eee;font-weight:bold">
-                    <th colspan="2">စုစုပေါင်း</th>
-                    <th>${totalGet ? displayGold(totalGet) : "_"}</th>
-                    <th>${totalGive ? displayGold(totalGive) : "_"}</th>
-                    <th>${totalGetFactor ? displayGold(totalGetFactor) : "_"}</th>
-                    <th>${totalGiveFactor ? displayGold(totalGiveFactor) : "_"}</th>
-                    <th>${totalBalance ? displayGold(totalBalance) : "_"}</th>
-                    <th></th>
-                </tr>
-            </tfoot>
-        </table>
-    `;
-}
-
-function shopView(shopName, index) {
-  let history =
-    JSON.parse(localStorage.getItem("shopHistory_" + shopName)) || [];
-
-  let data = history[index];
-
-  if (!data) {
-    alert("History not found!");
-    return;
-  }
-
-  let details = data.details || [];
-
-  let html = "";
-
-  let balance = 0;
-  let totalGive = 0;
-  let totalGet = 0;
-  let totalGetFactor = 0;
-  let totalGiveFactor = 0;
-
-  details.forEach((x) => {
-    let give = Number(x.give || 0);
-    let get = Number(x.get || 0);
-    let giveFactor = Number(x.givefactor || 0);
-    let getFactor = Number(x.getfactor || 0);
-
-    balance += get + getFactor - (give + giveFactor);
-
-    totalGive += give;
-    totalGet += get;
-    totalGiveFactor += giveFactor;
-    totalGetFactor += getFactor;
-
-    html += `
-            <tr>
-                <td>${formatDate(x.date)}</td>
-                <td>${get ? displayGold(get) : "-"}</td>
-                <td>${give ? displayGold(give) : "-"}</td>
-                <td>${getFactor ? displayGold(getFactor) : "-"}</td>
-                <td>${giveFactor ? displayGold(giveFactor) : "-"}</td>
-                <td>${balance ? displayGold(balance) : "-"}</td>
-            </tr>
-        `;
-  });
-
-  let totalBalance = totalGet + totalGetFactor - (totalGive + totalGiveFactor);
-
-  html += `
-        <tr style="background:#eee;font-weight:bold">
-            <td>Total</td>
-            <td>${totalGet ? displayGold(totalGet) : "-"}</td>
-            <td>${totalGive ? displayGold(totalGive) : "-"}</td>
-            <td>${totalGetFactor ? displayGold(totalGetFactor) : "-"}</td>
-            <td>${totalGiveFactor ? displayGold(totalGiveFactor) : "-"}</td>
-            <td>${totalBalance ? displayGold(totalBalance) : "-"}</td>
-        </tr>
-    `;
-
-  document.getElementById("shopDateRange").innerHTML =
-    `${formatDate(data.startDate)} မှ ${formatDate(data.endDate)} အထိ`;
-
-  document.getElementById("historyShopName").innerHTML = shopName;
-
-  document.getElementById("shopDetails").innerHTML = html;
-
-  document.getElementById("shopModal").style.display = "block";
-}
-
-function workerView(workerName, index) {
-  let history =
-    JSON.parse(localStorage.getItem("workerHistory_" + workerName)) || [];
-
-  let data = history[index];
-  console.log(workerName);
-  if (!data) return;
-
-  let html = "";
-  let balance = 0;
-  let totalGive = 0;
-  let totalGet = 0;
-  let totalFactor = 0;
-
-  data.details.forEach((x) => {
-    let give = Number(x.give || 0);
-    let get = Number(x.get || 0);
-    let factor = Number(x.factor || 0);
-
-    totalGive += give;
-    totalGet += get;
-    totalFactor += factor;
-    balance += get - give;
-    html += `
-
-            <tr>
-              <td>${formatDate(x.date)}</td>
-              <td>${give ? displayGold(give) : "-"}</td>
-              <td>${get ? displayGold(get) : "-"}</td>
-              <td>${x.types || "-"}</td>
-              <td>${balance ? displayGold(balance) : "-"}</td>
-              <td>${factor ? displayGold(factor) : "-"}</td>
-            </tr>
-            `;
-  });
-
-  // Total Row
-
-  html += `
-        <tr style="background:#eee;font-weight:bold;">
-          <td>Total</td>
-          <td>${totalGive ? displayGold(totalGive) : "-"}</td>
-          <td>${totalGet ? displayGold(totalGet) : "-"}</td>
-          <td>-</td>
-          <td>${totalGet - totalGive ? displayGold(totalGet - totalGive) : "-"}</td>
-          <td>${totalFactor ? displayGold(totalFactor) : "-"}</td>
-        </tr>
-        `;
-
-  // Header
-  document.getElementById("historyDateRange").innerHTML =
-    `${formatDate(data.startDate)} မှ ${formatDate(data.endDate)} အထိ`;
-  document.getElementById("historyWorkerName").innerHTML = workerName;
-  // Table
-  document.getElementById("historyDetails").innerHTML = html;
-  // Show Modal
-  document.getElementById("workerModal").style.display = "block";
-}
-
-function closeModal() {
-  document.getElementById("workerModal").style.display = "none";
-  document.getElementById("shopModal").style.display = "none";
-}
-
-function openhPage(id, menu) {
-  // Hide all pages
-  document.querySelector(".his-navbar").classList.add("inactive");
-  document.querySelectorAll(".hpage").forEach((page) => {
-    page.classList.remove("active");
-  });
-
-  // Show selected page
-  document.getElementById(id).classList.add("active");
-
-  // Remove active from all menu items
-  document.querySelectorAll(".his-nav-menu li").forEach((item) => {
-    item.classList.remove("active");
-  });
-
-  // Add active to clicked menu
-  menu.classList.add("active");
-  finalResult();
-}
+/* ============ Own gold (ဖိုစိုက်ရွှေ) ============ */
 
 showOwn();
 
 function ownSave() {
   let owngold = JSON.parse(localStorage.getItem("owngold")) || [];
-
   let ownDate = document.querySelector(".owndate").value;
   let obj = {
     date: ownDate,
@@ -1627,10 +967,8 @@ function ownSave() {
   }
 
   if (editIndex === -1) {
-    // အသစ်ထည့်
     owngold.push(obj);
   } else {
-    // ပြင်ဆင်
     owngold[editIndex] = obj;
     editIndex = -1;
   }
@@ -1642,40 +980,29 @@ function ownSave() {
 }
 
 function showOwn(index) {
-  let html = "";
   let goldData = JSON.parse(localStorage.getItem("owngold")) || [];
 
-  let balance = 0; // Running Balance
-
-  goldData.forEach((x, i) => {
-    balance += Number(x.own || 0);
-
-    html += `
+  let html = goldData
+    .map(
+      (x, i) => `
         <tr>
-            <td><input type="checkbox"
-                ${x.checked ? "checked" : ""}
-                onchange="otoggleCheck(${index}, ${i})"></td>
-
+            <td><input type="checkbox" ${x.checked ? "checked" : ""} onchange="otoggleCheck(${index}, ${i})"></td>
             <td>${formatDate(x.date)}</td>
             <td>${x.own ? goldText(x.own) : "-"}</td>
             <td>
                 ${
                   x.checked
                     ? '<span style="color:green;font-weight:bold;">✔ ပြီးစီး</span>'
-                    : `
-                        <button onclick="editOwnData(${index}, ${i})">✏️</button>
-                        <button onclick="deleteOwnData(${index}, ${i})">🗑️</button>
-                    `
+                    : `<button onclick="editOwnData(${index}, ${i})">✏️</button>
+                       <button onclick="deleteOwnData(${index}, ${i})">🗑️</button>`
                 }
             </td>
-        </tr>
-        `;
-  });
+        </tr>`,
+    )
+    .join("");
 
   let g = 0;
-  goldData.forEach((x) => {
-    g += Number(x.own || 0);
-  });
+  goldData.forEach((x) => (g += Number(x.own || 0)));
 
   html += `
     <tr style="font-weight:bold;background:#ffeeba">
@@ -1690,7 +1017,6 @@ function showOwn(index) {
 
 function otoggleCheck(workerIndex, itemIndex) {
   let goldData = JSON.parse(localStorage.getItem("owngold")) || [];
-
   goldData[itemIndex].checked = !goldData[itemIndex].checked;
   localStorage.setItem("owngold", JSON.stringify(goldData));
   showOwn(workerIndex);
@@ -1699,7 +1025,6 @@ function otoggleCheck(workerIndex, itemIndex) {
 function editOwnData(workerIndex, itemIndex) {
   editIndex = itemIndex;
   let goldData = JSON.parse(localStorage.getItem("owngold")) || [];
-
   let r = goldData[itemIndex];
   document.getElementById("ownGram").value = r.own;
   fromGram("own");
@@ -1715,54 +1040,3 @@ function deleteOwnData(workerIndex, itemIndex) {
     finalResult();
   }
 }
-
-function reBack() {
-  location.reload();
-}
-
-function Back() {
-  document.querySelector(".navbar").classList.remove("inactive");
-  document.querySelectorAll(".page").forEach((page) => {
-    page.classList.remove("active");
-  });
-}
-
-function workerBack() {
-  document.querySelector("#w_detail_div").classList.add("inactive");
-  document.querySelector("#name_list").classList.remove("inactive");
-  document.querySelectorAll(".second-nav").forEach((nav) => {
-    nav.classList.remove("inactive");
-  });
-}
-
-function shopBack() {
-  document.querySelector("#s_detail_div").classList.add("inactive");
-  document.querySelector("#shop_list").classList.remove("inactive");
-  document.querySelectorAll(".second-nav").forEach((nav) => {
-    nav.classList.remove("inactive");
-  });
-}
-
-function WhBack() {
-  document.querySelector("#name_h_div").classList.remove("inactive");
-  document.querySelector(".h-w-table").classList.add("inactive");
-  document.querySelectorAll(".second-nav").forEach((nav) => {
-    nav.classList.remove("inactive");
-  });
-}
-function ShBack() {
-  document.querySelector("#shop_h_div").classList.remove("inactive");
-  document.querySelector(".h-s-table").classList.add("inactive");
-  document.querySelectorAll(".second-nav").forEach((nav) => {
-    nav.classList.remove("inactive");
-  });
-}
-
-function showAbout() {
-  document.querySelector(".about").classList.remove("inactive");
-  document.querySelector(".setting-btns").classList.add("inactive");
-}
-
-function clear() {
-  document.querySelectorAll("input").forEach((x) => (x.value = ""));
-} // Initialize the display for the first worker

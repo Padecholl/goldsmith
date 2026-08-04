@@ -8,250 +8,373 @@
 </head>
 <body>  
          
-        <div class="container">
-                <nav class="navbar">
-                    <h2 style="text-align: center;padding-top: 5px;background-color: gold;">ရတနာခမ်း</h2>
-                            <div class="nav-menu">
-                                <li onclick="openPage('home', this)">🧾 နာမည်သွင်းရန်</li>
-                                <li onclick="openPage('workers', this)">🧾 တပည့်စာရင်းသွင်းရန်</li>
-                                <li onclick="openPage('shop', this)">🧾 ဆိုင်စာရင်းသွင်းရန်</li>
-                                <li onclick="openPage('addown', this)">🧾 စိုက်ရွှေထည့်ရန်</li>
-                                <li onclick="openPage('whistory', this)">🧾တပည့်စားရင်းကြည့်ရန်</li>
-                                <li onclick="openPage('shistory', this)">🧾ဆိုင်စားရင်းကြည့်ရန်</li>
-                                <li onclick="openPage('fhistory', this)">🧾စားရင်းချုပ်ကြည့်ရန်</li>
-                                <li onclick="openPage('setting', this)">⚙️ Setting</li>
-                            </div>
-                </nav>
+    <div class="container">
+      <nav class="navbar">
+        <h2
+          style="text-align: center; padding-top: 5px; background-color: gold"
+        >
+          ရတနာခမ်း
+        </h2>
+        <div class="nav-menu">
+          <li onclick="openPage('home', this)">🧾 နာမည်သွင်းရန်</li>
+          <li onclick="openPage('workers', this)">🧾 တပည့်စာရင်းသွင်းရန်</li>
+          <li onclick="openPage('shop', this)">🧾 ဆိုင်စာရင်းသွင်းရန်</li>
+          <li onclick="openPage('addown', this)">🧾 စိုက်ရွှေထည့်ရန်</li>
+          <li onclick="openPage('whistory', this)">🧾တပည့်စားရင်းကြည့်ရန်</li>
+          <li onclick="openPage('shistory', this)">🧾ဆိုင်စားရင်းကြည့်ရန်</li>
+          <li onclick="openPage('fhistory', this)">🧾စားရင်းချုပ်ကြည့်ရန်</li>
+          <li onclick="openPage('setting', this)">⚙️ Setting</li>
+        </div>
+      </nav>
 
-                <div id="home" class="page">
-                    <div class="second-nav">
-                        <div onclick="Back()" class="icon">🏠</div>
-                        <div>နာမည်စားရင်းသွင်းရန်</div>
-                        <div onclick="Back()" class="icon">⬅️</div>
+      <div id="home" class="page">
+        <div class="second-nav">
+          <div onclick="Back()" class="icon">🏠</div>
+          <div>နာမည်စားရင်းသွင်းရန်</div>
+          <div onclick="Back()" class="icon">⬅️</div>
+        </div>
 
-                    </div>
+        <div style="margin-top: 50px; display: grid; text-align: center">
+          <p>အမည်</p>
+          <input
+            type="text"
+            id="name_input"
+            placeholder="တပည့်နာမည်ထည့်ပါ..."
+          />
+          <button onclick="Save('worker')">ENTER</button>
+        </div>
+        <div style="margin-top: 50px; display: grid; text-align: center">
+          <p>ဆိုင်</p>
+          <input
+            type="text"
+            id="shop_input"
+            placeholder="ဆိုင်နာမည်ထည့်ပါ..."
+          />
+          <button onclick="Save('shop')">ENTER</button>
+        </div>
+      </div>
 
+      <div id="workers" class="page">
+        <div class="on-off-nav">
+          <div class="second-nav">
+            <div onclick="Back()" class="icon">🏠</div>
+            <div>စာရင်းသွင်းမည်</div>
+            <div onclick="Back()" class="icon">⬅️</div>
+          </div>
+  
+          <div id="name_list"></div>
+        </div>
+        <div id="w_detail_div"></div>
+      </div>
 
-                    <div style="margin-top: 50px;display: grid;text-align: center;">
-                        <p>အမည်</p>
-                        <input type="text" id="name_input" placeholder="တပည့်နာမည်ထည့်ပါ...">
-                        <button onclick="Save('worker')">ENTER</button>
-                    </div>
-                    <div style="margin-top: 50px;display: grid;text-align: center;">
-                        <p>ဆိုင်</p>
-                        <input type="text" id="shop_input" placeholder="ဆိုင်နာမည်ထည့်ပါ...">
-                        <button onclick="Save('shop')">ENTER</button>   
-                    </div>
-                </div>
+      <div id="shop" class="page">
+        <div class="on-off-nav">
+          <div class="second-nav">
+            <div onclick="Back()" class="icon">🏠</div>
+            <div>စာရင်းသွင်းမည်</div>
+            <div onclick="Back()" class="icon">⬅️</div>
+          </div>
+  
+          <div id="shop_list"></div>
 
-    
-                <div id="workers" class="page">
-                    <div class="second-nav">
-                        <div onclick="Back()" class="icon">🏠</div>
-                        <div>စာရင်းသွင်းမည်</div>
-                        <div  onclick="Back()" class="icon" >⬅️</div>
+        </div>
+        <div id="s_detail_div"></div>
+      </div>
 
-                    </div>
-                        
-                        <div id="name_list"></div>
-                        <div id="w_detail_div"></div>
-                    
-                </div>
+      <div id="addown" class="page">
+        <div class="on-off-nav">
+          <div class="second-nav">
+            <div onclick="Back()" class="icon">⬅️</div>
+            <div>ဖိုစိုက်‌ရွှေ</div>
+            <div><input type="date" class="owndate" id="ownDate" /></div>
+          </div>
 
-                <div id="shop" class="page">
-                    <div class="second-nav">
-                        <div onclick="Back()" class="icon">🏠</div>
-                        <div>စာရင်းသွင်းမည်</div>
-                        <div  onclick="Back()" class="icon" >⬅️</div>
-                    </div>
+        </div>
 
-                    <div id="shop_list"></div>
-                    <div id="s_detail_div"></div>
-                </div>
-                    
+        <div
+          class="input-group"
+          style="
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 95%;
+            margin: 10px 0;
+            background-color: rgb(255, 255, 255);
+            padding: 5px;
+          "
+        >
+          <div style="padding: 5px">
+            <input id="ownGram" placeholder="Gram" oninput="fromGram('own')" />
+          </div>
+          <div
+            class="kpy-div"
+            style="
+              display: flex;
+              align-items: center;
+              justify-content: space-between;
+            "
+          >
+            <div>
+              <input
+                id="ownKyat"
+                placeholder="ကျပ်"
+                oninput="fromGold('own')"
+              />
+            </div>
+            <div>
+              <input id="ownPae" placeholder="ပဲ" oninput="fromGold('own')" />
+            </div>
+            <div>
+              <input
+                id="ownYway"
+                placeholder="ရွေး"
+                oninput="fromGold('own')"
+              />
+            </div>
+          </div>
+          <div style="padding: 5px">
+            <button style="padding: 5px; width: 200px" onclick="ownSave()">
+              SAVE
+            </button>
+          </div>
+        </div>
 
-                <div id="addown" class="page" >
-                                <div class="second-nav">
-                                    <div  onclick="Back()" class="icon" >⬅️</div>
-                                    <div>ဖိုစိုက်‌ရွှေ</div>
-                                    <div><input type="date" class="owndate" id="ownDate"></div>
-                                </div>
+        <div style="width: 100%">
+          <table border="1" width="100%" cellpadding="5">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Date</th>
+                <th>စိုက်ရွှေ</th>
+                <th>Action</th>
+              </tr>
+            </thead>
 
-                                <div class="input-group" style="display:flex;flex-direction: column;align-items: center; width: 95%; margin: 10px 0;background-color: rgb(255, 255, 255); padding: 5px;">
-                                        <div style="padding: 5px;">
-                                            <input id="ownGram" placeholder="Gram" oninput="fromGram('own')" />
-                                        </div>
-                                        <div class="kpy-div" style="display:flex;align-items:center; justify-content:space-between;">
-                                            <div>
-                                                <input id="ownKyat" placeholder="ကျပ်" oninput="fromGold('own')" />
-                                            </div>
-                                            <div>
-                                                <input id="ownPae" placeholder="ပဲ" oninput="fromGold('own')" />
-                                            </div>
-                                            <div>
-                                                <input id="ownYway" placeholder="ရွေး" oninput="fromGold('own')" />
-                                            </div>
-                                        </div>
-                                        <div style="padding: 5px;"><button style="padding: 5px; width: 200px;" onclick="ownSave()">SAVE</button></div>
-                                </div>
-                                <div style="width: 100%;">
-                                    <table border="1" width="100%" cellpadding="5">
-                                            <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Date</th>
-                                                    <th>စိုက်ရွှေ</th>
-                                                    <th>Action</th>
-                                                </tr>
-                                            </thead>
-                                        
-                                            <tbody id="own_tbody"></tbody>
-                                    </table>
-                                </div>
-                </div>
+            <tbody id="own_tbody"></tbody>
+          </table>
+        </div>
+      </div>
 
-                <div id="whistory" class="page" >
-                    <div class="second-nav">
-                        <div onclick="Back()" class="icon" >🏠</div>
-                        <div>တပည့်စာရင်းများ</div>
-                        <div  onclick="Back()" class="icon" >⬅️</div>
-                    </div>
-                               
-                    <div id="name_h_div"> </div>
-                    <div id="mainHWorkerTable" class="h-w-table"></div>
+      <div id="whistory" class="page">
 
-                    <div id="workerModal" style="display:none;position:fixed;
-                                       inset:0;background:rgba(0,0,0,.6);z-index:999;">
+        <div class="on-off-nav">
+          <div class="second-nav">
+            <div onclick="Back()" class="icon">🏠</div>
+            <div>တပည့်စာရင်းများ</div>
+            <div onclick="Back()" class="icon">⬅️</div>
+          </div>
+  
+          <div id="name_h_div" class="name-h-div"></div>
 
-                                    <div style="background:#fff;width:90%;max-width:1000px;
-                                         margin:30px auto;padding:15px;border-radius:10px;">
-
-                                        <div style="display:flex;justify-content:space-between;
-                                                    align-items:center;margin-bottom:10px;">
-                                            <h5 id="historyDateRange"></h5>
-                                            <h3 id="historyWorkerName"></h3>
-                                            <button onclick="closeModal()">❌</button>
-                                        </div>
-
-
-                                <div style="max-height:500px;overflow-y:auto;border:1px solid #ccc;">
-                                        <table border="1" width="100%" cellpadding="5" style="border-collapse:collapse;">
-                                            <thead style="position:sticky;top:0;background:#fff;z-index:10;">
-
-                                                <tr>
-                                                    <th>Date</th>
-                                                    <th>ပေးရွှေ</th>
-                                                    <th>အပ်ရွှေ</th>
-                                                    <th>Types</th>
-                                                    <th>ကျန်</th>
-                                                    <th>လျော့</th>
-                                                </tr>
-
-                                            </thead>
-
-                                            <tbody id="historyDetails"></tbody>
-
-                                        </table>
-                                </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div id="shistory" class="page">
-                    <div class="second-nav">
-                        <div onclick="Back()" class="icon" >🏠</div>
-                        <div>ဆိုင်စာရင်းများ</div>
-                        <div  onclick="Back()" class="icon" >⬅️</div>
-                    </div>
-                                
-                    <div id="shop_h_div"></div>
-                    <div id="mainHShopTable" class="h-s-table"></div>            
-
-
-                       <div id="shopModal" style="display:none;position:fixed;
-                            inset:0;background:rgba(0,0,0,.6);z-index:999;">
-
-                            <div style="background:#fff;width:90%;max-width:1000px;
-                                margin:30px auto;padding:15px;border-radius:10px;">
-
-                                    <div style="display:flex;justify-content:space-between;
-                                                align-items:center;margin-bottom:10px;">
-                                        <h5 id="shopDateRange"></h5>
-                                        <h3 id="historyShopName"></h3>
-                                        <button onclick="closeModal()">❌</button>
-                                    </div>
+        </div>
 
 
-                                    <div style="max-height:500px;overflow-y:auto;border:1px solid #ccc;">
-                                            <table border="1" width="100%" cellpadding="5" style="border-collapse:collapse;">
-                                                <thead style="position:sticky;top:0;background:#fff;z-index:10;">
+        <div id="mainHWorkerTable" class="h-w-table"></div>
 
-                                                    <tr>
-                                                        <th>Date</th>
-                                                        <th>လက်ခံ</th>
-                                                        <th>ပြန်ပေး</th>
-                                                        <th>ရလျော့</th>
-                                                        <th>ပေးလျော့</th>
-                                                        <th>ကျန်</th>
-                                                    </tr>
+        <div
+          id="workerModal"
+          style="
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+          "
+        >
+          <div
+            style="
+              background: #fff;
+              width: 90%;
+              max-width: 1000px;
+              margin: 30px auto;
+              padding: 15px;
+              border-radius: 10px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+              "
+            >
+              <h5 id="historyDateRange"></h5>
+              <h3 id="historyWorkerName"></h3>
+              <button onclick="closeModal()">❌</button>
+            </div>
 
-                                                </thead>
+            <div
+              style="
+                max-height: 500px;
+                overflow-y: auto;
+                border: 1px solid #ccc;
+              "
+            >
+              <table
+                border="1"
+                width="100%"
+                cellpadding="5"
+                style="border-collapse: collapse"
+              >
+                <thead
+                  style="
+                    position: sticky;
+                    top: 0;
+                    background: #fff;
+                    z-index: 10;
+                  "
+                >
+                  <tr>
+                    <th>Date</th>
+                    <th>ပေးရွှေ</th>
+                    <th>အပ်ရွှေ</th>
+                    <th>Types</th>
+                    <th>ကျန်</th>
+                    <th>လျော့</th>
+                  </tr>
+                </thead>
 
-                                                <tbody id="shopDetails"></tbody>
+                <tbody id="historyDetails"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 
-                                            </table>
-                                    </div>
-                           </div>
+      <div id="shistory" class="page">
 
-                       </div>   
-                </div>
+        <div class="on-off-nav">
+          <div class="second-nav">
+            <div onclick="Back()" class="icon">🏠</div>
+            <div>ဆိုင်စာရင်းများ</div>
+            <div onclick="Back()" class="icon">⬅️</div>
+          </div>
+  
+          <div id="shop_h_div" class="shop-h-div"></div>
 
-                <div id="fhistory" class="page">
-                    <div class="second-nav">
-                        <div onclick="Back()" class="icon" >🏠</div>
-                        <div>စာရင်းချုပ်</div>
-                        <div  onclick="Back()" class="icon">⬅️</div>
-                    </div>
-                
-                                <table border="1" width="100%" cellpadding="5">
-                                            <thead>
-                                                <tr>
-                                                    <th>အမည်</th>
-                                                    <th>စိုက်</th>
-                                                    <th>ရရွှေ</th>
-                                                    <th>ပေးရွှေ</th>
-                                                    <th>လျော့</th>
-                                                    <th>ရလျော့</th>
-                                                    <th>ပေးလျော့</th>
-                                                    <th>ကျန်</th>
-                                                </tr>
-                                            </thead>
-                                        
-                                            <tbody id="final_history"></tbody>
-                                            <tbody id="historyFoot"></tbody>
-                                </table>
-                        
-                </div>
+        </div>
+        <div id="mainHShopTable" class="h-s-table"></div>
 
-                <div id="setting" class="page" >
-                    <div class="second-nav">
-                        <div onclick="reBack()" class="icon">🏠</div>
-                        <div onclick="reBack()">Setting</div>    
-                    </div>
-                                <div class="setting-btns">
+        <div
+          id="shopModal"
+          style="
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+          "
+        >
+          <div
+            style="
+              background: #fff;
+              width: 90%;
+              max-width: 1000px;
+              margin: 30px auto;
+              padding: 15px;
+              border-radius: 10px;
+            "
+          >
+            <div
+              style="
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 10px;
+              "
+            >
+              <h5 id="shopDateRange"></h5>
+              <h3 id="historyShopName"></h3>
+              <button onclick="closeModal()">❌</button>
+            </div>
+
+            <div
+              style="
+                max-height: 500px;
+                overflow-y: auto;
+                border: 1px solid #ccc;
+              "
+            >
+              <table
+                border="1"
+                width="100%"
+                cellpadding="5"
+                style="border-collapse: collapse"
+              >
+                <thead
+                  style="
+                    position: sticky;
+                    top: 0;
+                    background: #fff;
+                    z-index: 10;
+                  "
+                >
+                  <tr>
+                    <th>Date</th>
+                    <th>လက်ခံ</th>
+                    <th>ပြန်ပေး</th>
+                    <th>ရလျော့</th>
+                    <th>ပေးလျော့</th>
+                    <th>ကျန်</th>
+                  </tr>
+                </thead>
+
+                <tbody id="shopDetails"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="fhistory" class="page">
+        <div class="on-off-nav">
+          <div class="second-nav">
+            <div onclick="Back()" class="icon">🏠</div>
+            <div>စာရင်းချုပ်</div>
+            <div onclick="Back()" class="icon">⬅️</div>
+          </div>
+        </div>
+
+        <table border="1" width="100%" cellpadding="5">
+          <thead>
+            <tr>
+              <th>အမည်</th>
+              <th>စိုက်</th>
+              <th>ရရွှေ</th>
+              <th>ပေးရွှေ</th>
+              <th>လျော့</th>
+              <th>ရလျော့</th>
+              <th>ပေးလျော့</th>
+              <th>ကျန်</th>
+            </tr>
+          </thead>
+
+          <tbody id="final_history"></tbody>
+          <tbody id="historyFoot"></tbody>
+        </table>
+      </div>
+
+      <div id="setting" class="page">
+        <div class="second-nav">
+          <div onclick="Back()" class="icon">🏠</div>
+          <div onclick="Setting()">Setting</div>
+        </div>
+                            <div class="setting-btns">
                                     <button onclick="changePassword()">Change Password</button>
                                     <button onclick="backupData()">Backup Data</button>
                                     <button onclick="restoreData()">Restore Data</button>
                                     <button onclick="deleteAllData()">Delete And Save</button>
                                     <button onclick="showAbout()">About</button>
                               </div>
-                            <div class="about inactive">
-                                    <h1>GoldSmith</h1>
-                                    <label>Version: 1.1</label>
-                                    <p>Contact: padecholl@gmail.com</p>
-                                    <p>Copyright &copy; 2026 Developed by Padecholl.</p>
-                            </div>
-                  </div>
+                              <div class="about inactive">
+                                       <h1>GoldSmith</h1>
+                                       <label>Version: 1.1</label>
+                                       <p>Contact: padecholl@gmail.com</p>
+                                       <p>Copyright &copy; 2026 Developed by Padecholl.</p>
+                               </div>
+      </div>
+    </div>
 
     <script src="script.js"></script>
 </body>
