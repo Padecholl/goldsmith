@@ -24,7 +24,7 @@
         <h2
           style="text-align: center; padding-top: 5px; background-color: gold"
         >
-          ရတနာခမ်း
+          <span id="appTitle"></span>
         </h2>
         <div class="nav-menu">
           <li onclick="openPage('home', this)">🧾 နာမည်သွင်းရန်</li>
@@ -369,7 +369,8 @@
           <div id="changeBox">
               <input type="password" id="oldPass" placeholder="Current Password">
               <input type="password" id="newPass" placeholder="New Password">
-              <button onclick="changePassword()">Save Password</button>
+              <input type="text" id="newTitle" placeholder="New Title">
+              <button onclick="changePassword()">Save Changes</button>
 
         </div>
           <button onclick="showChange()">Change Password</button>
