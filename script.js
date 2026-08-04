@@ -7,24 +7,132 @@ function openPage(id, menu) {
   menu.classList.add("active");
 }
 
-/* ============ Password / Backup / Restore ============ */
+const DEFAULT_PASSWORD = "1234";
 
+// ပထမဆုံးဖွင့်ရင် Default Password သိမ်း
 if (!localStorage.getItem("password")) {
-  localStorage.setItem("password", "1234");
+    localStorage.setItem("password", DEFAULT_PASSWORD);
+}
+
+// ==========================
+// Page Load
+// ==========================
+window.onload = function () {
+
+    if (localStorage.getItem("isLogin") === "true") {
+
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("app").style.display = "block";
+
+    } else {
+
+        document.getElementById("loginPage").style.display = "flex";
+        document.getElementById("app").style.display = "none";
+
+    }
+
+};
+
+// ==========================
+// Login
+// ==========================
+function login() {
+
+    let password = document.getElementById("loginPass").value;
+    let savedPassword = localStorage.getItem("password");
+
+    if (password === savedPassword) {
+
+        // Login State သိမ်း
+        localStorage.setItem("isLogin", "true");
+
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("app").style.display = "block";
+
+        document.getElementById("loginPass").value = "";
+        document.getElementById("loginMsg").innerHTML = "";
+
+    } else {
+
+        document.getElementById("loginMsg").innerHTML = "Password မှားနေပါတယ်";
+
+    }
+
+}
+
+// ==========================
+// Logout
+// ==========================
+function logout() {
+
+    // Login State ဖျက်
+    localStorage.removeItem("isLogin");
+
+    document.getElementById("app").style.display = "none";
+    document.getElementById("loginPage").style.display = "flex";
+
+    document.getElementById("loginPass").value = "";
+
+}
+
+// ==========================
+// Change Password
+// ==========================
+function showChange() {
+
+    const box = document.getElementById("changeBox");
+
+    box.style.display =
+        box.style.display === "block" ? "none" : "block";
+
 }
 
 function changePassword() {
-  let oldPass = prompt("လက်ရှိ Password");
-  if (oldPass !== localStorage.getItem("password")) {
-    alert("Password မှားပါတယ်");
-    return;
-  }
-  let newPass = prompt("Password အသစ်");
-  if (newPass) {
+
+    let oldPass = document.getElementById("oldPass").value;
+    let newPass = document.getElementById("newPass").value;
+
+    let savedPassword = localStorage.getItem("password");
+
+    if (oldPass !== savedPassword) {
+        alert("Current Password မှားနေပါတယ်");
+        return;
+    }
+
+    if (newPass.trim() === "") {
+        alert("New Password ထည့်ပါ");
+        return;
+    }
+
     localStorage.setItem("password", newPass);
+
     alert("Password ပြောင်းပြီးပါပြီ");
-  }
+
+    document.getElementById("oldPass").value = "";
+    document.getElementById("newPass").value = "";
+    document.getElementById("changeBox").style.display = "none";
+
 }
+
+
+/* ============ Password / Backup / Restore ============ */
+
+// if (!localStorage.getItem("password")) {
+//   localStorage.setItem("password", "1234");
+// }
+
+// function changePassword() {
+//   let oldPass = prompt("လက်ရှိ Password");
+//   if (oldPass !== localStorage.getItem("password")) {
+//     alert("Password မှားပါတယ်");
+//     return;
+//   }
+//   let newPass = prompt("Password အသစ်");
+//   if (newPass) {
+//     localStorage.setItem("password", newPass);
+//     alert("Password ပြောင်းပြီးပါပြီ");
+//   }
+// }
 
 function backupData() {
   let data = {};
@@ -358,8 +466,6 @@ function openDetail(type, index) {
 
 const workerDetail = (index) => openDetail("worker", index);
 const shopDetail = (index) => openDetail("shop", index);
-
-
 
 function saveData(type, index) {
   const isWorker = type === "worker";
@@ -715,6 +821,7 @@ function historyView(type, name, idx) {
 function workerView(name, idx) {
   historyView("worker", name, idx);
 }
+
 function shopView(name, idx) {
   historyView("shop", name, idx);
 }
@@ -839,6 +946,7 @@ function showHistory(type, name) {
 function WorkerHistory(name) {
   showHistory("worker", name);
 }
+
 function ShopHistory(name) {
   showHistory("shop", name);
 }
@@ -850,10 +958,9 @@ function Back() {
 
 function reBack() {
   location.reload();
-  // document.querySelector(".navbar").classList.remove("inactive");
-  // document.querySelectorAll(".page").forEach((page) => page.classList.remove("active"));
-  // document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
 }
+
+document.getElementById("about").addEventListener("click", Back);
 
 function workerBack() {
   document.querySelector("#w_detail_div").classList.add("inactive");
@@ -872,11 +979,6 @@ function WhBack() {
 function ShBack() {
   document.querySelector(".h-s-table").classList.add("inactive");
   document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
-}
-
-function Setting() {
-  document.querySelector(".about").classList.add("inactive");
-  document.querySelector(".setting-btns").classList.remove("inactive");
 }
 
 /* ============ Final summary (all workers + shops + own gold) ============ */

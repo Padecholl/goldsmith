@@ -1,14 +1,25 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>GoldSmith</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>  
-         
-    <div class="container">
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="loginPage">
+      <div class="login-box">
+        <h2>🔒 Login</h2>
+
+        <input type="password" id="loginPass" placeholder="Password" />
+
+        <button onclick="login()">Login</button>
+
+        <div id="loginMsg" class="msg"></div>
+      </div>
+    </div>
+
+    <div class="container" id="app">
       <nav class="navbar">
         <h2
           style="text-align: center; padding-top: 5px; background-color: gold"
@@ -24,6 +35,7 @@
           <li onclick="openPage('shistory', this)">🧾ဆိုင်စားရင်းကြည့်ရန်</li>
           <li onclick="openPage('fhistory', this)">🧾စားရင်းချုပ်ကြည့်ရန်</li>
           <li onclick="openPage('setting', this)">⚙️ Setting</li>
+          <li onclick="openPage('about', this)">ℹ️ About</li>
         </div>
       </nav>
 
@@ -61,7 +73,7 @@
             <div>စာရင်းသွင်းမည်</div>
             <div onclick="Back()" class="icon">⬅️</div>
           </div>
-  
+
           <div id="name_list"></div>
         </div>
         <div id="w_detail_div"></div>
@@ -74,9 +86,8 @@
             <div>စာရင်းသွင်းမည်</div>
             <div onclick="Back()" class="icon">⬅️</div>
           </div>
-  
-          <div id="shop_list"></div>
 
+          <div id="shop_list"></div>
         </div>
         <div id="s_detail_div"></div>
       </div>
@@ -88,7 +99,6 @@
             <div>ဖိုစိုက်‌ရွှေ</div>
             <div><input type="date" class="owndate" id="ownDate" /></div>
           </div>
-
         </div>
 
         <div
@@ -156,18 +166,15 @@
       </div>
 
       <div id="whistory" class="page">
-
         <div class="on-off-nav">
           <div class="second-nav">
             <div onclick="Back()" class="icon">🏠</div>
             <div>တပည့်စာရင်းများ</div>
             <div onclick="Back()" class="icon">⬅️</div>
           </div>
-  
+
           <div id="name_h_div" class="name-h-div"></div>
-
         </div>
-
 
         <div id="mainHWorkerTable" class="h-w-table"></div>
 
@@ -243,16 +250,14 @@
       </div>
 
       <div id="shistory" class="page">
-
         <div class="on-off-nav">
           <div class="second-nav">
             <div onclick="Back()" class="icon">🏠</div>
             <div>ဆိုင်စာရင်းများ</div>
             <div onclick="Back()" class="icon">⬅️</div>
           </div>
-  
-          <div id="shop_h_div" class="shop-h-div"></div>
 
+          <div id="shop_h_div" class="shop-h-div"></div>
         </div>
         <div id="mainHShopTable" class="h-s-table"></div>
 
@@ -358,24 +363,35 @@
       <div id="setting" class="page">
         <div class="second-nav">
           <div onclick="Back()" class="icon">🏠</div>
-          <div onclick="Setting()">Setting</div>
+          <div onclick="Back()">Setting</div>
         </div>
-                            <div class="setting-btns">
-                                    <button onclick="changePassword()">Change Password</button>
-                                    <button onclick="backupData()">Backup Data</button>
-                                    <button onclick="restoreData()">Restore Data</button>
-                                    <button onclick="deleteAllData()">Delete And Save</button>
-                                    <button onclick="showAbout()">About</button>
-                              </div>
-                              <div class="about inactive">
-                                       <h1>GoldSmith</h1>
-                                       <label>Version: 1.1</label>
-                                       <p>Contact: padecholl@gmail.com</p>
-                                       <p>Copyright &copy; 2026 Developed by Padecholl.</p>
-                               </div>
+        <div class="setting-btns">
+          <div id="changeBox">
+              <input type="password" id="oldPass" placeholder="Current Password">
+              <input type="password" id="newPass" placeholder="New Password">
+              <button onclick="changePassword()">Save Password</button>
+
+        </div>
+          <button onclick="showChange()">Change Password</button>
+          <button onclick="backupData()">Backup Data for More Data</button>
+          <button onclick="restoreData()">Restore Data</button>
+          <button onclick="deleteAllData()">Reset And Save</button>
+          <button onclick="logout()">Logout</button>
+        </div>
+        
+
+
       </div>
+
+      <div id="about" class="page">
+          <h1>GoldSmith</h1>
+          <label>Version: 1.1</label>
+          <p>Contact: padecholl@gmail.com</p>
+          <p>Copyright &copy; 2026 Developed by Padecholl.</p>
+      </div>
+
     </div>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
