@@ -8,10 +8,16 @@ function openPage(id, menu) {
 }
 
 const DEFAULT_PASSWORD = "1234";
+const DEFAULT_TITLE = "Goldsmith";
 
 // ပထမဆုံးဖွင့်ရင် Default Password သိမ်း
 if (!localStorage.getItem("password")) {
     localStorage.setItem("password", DEFAULT_PASSWORD);
+}
+
+
+if (!localStorage.getItem("title")) {
+    localStorage.setItem("title", DEFAULT_TITLE);
 }
 
 // ==========================
@@ -42,7 +48,6 @@ function login() {
     let savedPassword = localStorage.getItem("password");
 
     if (password === savedPassword) {
-
         // Login State သိမ်း
         localStorage.setItem("isLogin", "true");
 
@@ -51,46 +56,36 @@ function login() {
 
         document.getElementById("loginPass").value = "";
         document.getElementById("loginMsg").innerHTML = "";
-
     } else {
-
         document.getElementById("loginMsg").innerHTML = "Password မှားနေပါတယ်";
-
     }
-
 }
 
 // ==========================
 // Logout
 // ==========================
 function logout() {
-
     // Login State ဖျက်
     localStorage.removeItem("isLogin");
-
     document.getElementById("app").style.display = "none";
     document.getElementById("loginPage").style.display = "flex";
-
     document.getElementById("loginPass").value = "";
-
 }
 
 // ==========================
 // Change Password
 // ==========================
 function showChange() {
-
     const box = document.getElementById("changeBox");
-
     box.style.display =
         box.style.display === "block" ? "none" : "block";
-
 }
 
 function changePassword() {
 
     let oldPass = document.getElementById("oldPass").value;
     let newPass = document.getElementById("newPass").value;
+    let newTitle = document.getElementById("newTitle").value;
 
     let savedPassword = localStorage.getItem("password");
 
@@ -105,14 +100,20 @@ function changePassword() {
     }
 
     localStorage.setItem("password", newPass);
+    localStorage.setItem("title", newTitle.trim() === "" ? DEFAULT_TITLE : newTitle.trim());
+    document.getElementById("appTitle").innerText = localStorage.getItem("title");
 
-    alert("Password ပြောင်းပြီးပါပြီ");
+    
+
+    alert("Changes saved successfully");
 
     document.getElementById("oldPass").value = "";
     document.getElementById("newPass").value = "";
+    document.getElementById("newTitle").value = "";
     document.getElementById("changeBox").style.display = "none";
 
 }
+document.getElementById("appTitle").innerText = localStorage.getItem("title");
 
 
 /* ============ Password / Backup / Restore ============ */
