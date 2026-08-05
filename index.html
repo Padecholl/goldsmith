@@ -8,6 +8,7 @@
   </head>
   <body>
     <div id="loginPage">
+      <h2>Welcome to GoldSmith</h2> <br>
       <div class="login-box">
         <h2>🔒 Login</h2>
 
@@ -17,13 +18,15 @@
 
         <div id="loginMsg" class="msg"></div>
       </div>
+      
     </div>
 
     <div class="container" id="app">
       <nav class="navbar">
-        <div style="text-align: center; padding-top: 5px; background-color: gold;">
+        <div style="text-align: center; padding-top: 5px;margin: 0 5px;
+         background: #111;color: #FFD700;">
           <h2 >"<span id="appTitle"></span>"</h2> 
-          <h4>ပန်းတိမ်ဖို</h4>
+          <h4>ပန်းထိမ်ဖို</h4>
         </div>
         <div class="nav-menu">
           <li onclick="openPage('home', this)">🧾 နာမည်သွင်းရန်</li>
@@ -34,7 +37,8 @@
           <li onclick="openPage('shistory', this)">🧾ဆိုင်စားရင်းကြည့်ရန်</li>
           <li onclick="openPage('fhistory', this)">🧾စားရင်းချုပ်ကြည့်ရန်</li>
           <li onclick="openPage('setting', this)">⚙️ Setting</li>
-          <li onclick="openPage('about', this)">ℹ️ About</li>
+          <li onclick="logout()" style="color: red;">🚪 Logout</li>
+
         </div>
       </nav>
 
@@ -202,10 +206,10 @@
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
-                margin-bottom: 10px;
+                margin-bottom: 5px;
               "
             >
-              <h5 id="historyDateRange"></h5>
+              <span style="font-size: 10px;" id="historyDateRange"></span>
               <h3 id="historyWorkerName"></h3>
               <button onclick="closeModal()">❌</button>
             </div>
@@ -236,8 +240,8 @@
                     <th>ပေးရွှေ</th>
                     <th>အပ်ရွှေ</th>
                     <th>Types</th>
-                    <th>ကျန်</th>
                     <th>လျော့</th>
+                    <th>ကျန်</th>
                   </tr>
                 </thead>
 
@@ -288,7 +292,7 @@
                 margin-bottom: 10px;
               "
             >
-              <h5 id="shopDateRange"></h5>
+              <span style="font-size: 10px;" id="shopDateRange"></span>
               <h3 id="historyShopName"></h3>
               <button onclick="closeModal()">❌</button>
             </div>
@@ -373,10 +377,11 @@
 
         </div>
           <button onclick="showChange()">Change Password</button>
-          <button onclick="backupData()">Backup Data for More Data</button>
+          <button onclick="backupData()">Backup for continue</button>
           <button onclick="restoreData()">Restore Data</button>
-          <button onclick="deleteAllData()">Reset And Save</button>
-          <button onclick="logout()">Logout</button>
+          <button onclick="deleteAllData()" style="color: red;">Save & Reset</button>
+          <button onclick="openPage('about', this)">About</button>
+
         </div>
         
 
