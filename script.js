@@ -116,25 +116,6 @@ function changePassword() {
 document.getElementById("appTitle").innerText = localStorage.getItem("title");
 
 
-/* ============ Password / Backup / Restore ============ */
-
-// if (!localStorage.getItem("password")) {
-//   localStorage.setItem("password", "1234");
-// }
-
-// function changePassword() {
-//   let oldPass = prompt("လက်ရှိ Password");
-//   if (oldPass !== localStorage.getItem("password")) {
-//     alert("Password မှားပါတယ်");
-//     return;
-//   }
-//   let newPass = prompt("Password အသစ်");
-//   if (newPass) {
-//     localStorage.setItem("password", newPass);
-//     alert("Password ပြောင်းပြီးပါပြီ");
-//   }
-// }
-
 function backupData() {
   let data = {};
   Object.keys(localStorage).forEach((key) => (data[key] = localStorage.getItem(key)));
@@ -364,6 +345,7 @@ function Save(type) {
   localStorage.setItem(type === "worker" ? "workers" : "shops", JSON.stringify(list));
   input.value = "";
   display();
+  nameForHistory();
 }
 
 function Delete(type, i) {
@@ -723,9 +705,11 @@ function closeList(type, index) {
   history.push(entry);
   localStorage.setItem(historyKey, JSON.stringify(history));
   localStorage.setItem(key, JSON.stringify([]));
-
+  
   alert("စာရင်းပိတ်ပြီး History ထဲသိမ်းပြီးပါပြီ");
   renderList(type, index);
+  finalResult();
+  // nameForHistory();
 }
 
 /* ============ History modal (view a closed period) ============ */
@@ -761,11 +745,11 @@ function historyView(type, name, idx) {
       rows += `
         <tr>
           <td>${formatDate(x.date)}</td>
-          <td>${give ? displayGold(give) : "0"}</td>
-          <td>${get ? displayGold(get) : "0"}</td>
+          <td>${give ? displayGold(give) : "-"}</td>
+          <td>${get ? displayGold(get) : "-"}</td>
           <td>${x.types || "-"}</td>
+          <td>${factor ? displayGold(factor) : "-"}</td>
           <td>${balance ? displayGold(balance) : "0"}</td>
-          <td>${factor ? displayGold(factor) : "0"}</td>
         </tr>`;
     } else {
       const getFactor = Number(x.getfactor || 0);
@@ -776,26 +760,27 @@ function historyView(type, name, idx) {
       rows += `
         <tr>
           <td>${formatDate(x.date)}</td>
-          <td>${get ? displayGold(get) : "0"}</td>
-          <td>${give ? displayGold(give) : "0"}</td>
-          <td>${getFactor ? displayGold(getFactor) : "0"}</td>
-          <td>${giveFactor ? displayGold(giveFactor) : "0"}</td>
+          <td>${get ? displayGold(get) : "-"}</td>
+          <td>${give ? displayGold(give) : "-"}</td>
+          <td>${getFactor ? displayGold(getFactor) : "-"}</td>
+          <td>${giveFactor ? displayGold(giveFactor) : "-"}</td>
           <td>${balance ? displayGold(balance) : "0"}</td>
         </tr>`;
     }
   });
 
-  const dateRange = `${formatDate(data.startDate)} မှ ${formatDate(data.endDate)} အထိ`;
+  const dateRange = `${formatDate(data.startDate)} မှ <br> 
+                     ${formatDate(data.endDate)} အထိ`;
 
   if (isWorker) {
     rows += `
       <tr style="background:#eee;font-weight:bold">
         <td>Total</td>
-        <td>${totalGive ? displayGold(totalGive) : "0"}</td>
-        <td>${totalGet ? displayGold(totalGet) : "0"}</td>
+        <td>${totalGive ? displayGold(totalGive) : "-"}</td>
+        <td>${totalGet ? displayGold(totalGet) : "-"}</td>
         <td>-</td>
+        <td>${totalFactor ? displayGold(totalFactor) : "-"}</td>
         <td>${totalGet - totalGive ? displayGold(totalGet - totalGive) : "0"}</td>
-        <td>${totalFactor ? displayGold(totalFactor) : "0"}</td>
       </tr>`;
     document.getElementById("historyDateRange").innerHTML = dateRange;
     document.getElementById("historyWorkerName").innerHTML = name;
@@ -806,10 +791,10 @@ function historyView(type, name, idx) {
     rows += `
       <tr style="background:#eee;font-weight:bold">
         <td>Total</td>
-        <td>${totalGet ? displayGold(totalGet) : "0"}</td>
-        <td>${totalGive ? displayGold(totalGive) : "0"}</td>
-        <td>${totalGetFactor ? displayGold(totalGetFactor) : "0"}</td>
-        <td>${totalGiveFactor ? displayGold(totalGiveFactor) : "0"}</td>
+        <td>${totalGet ? displayGold(totalGet) : "-"}</td>
+        <td>${totalGive ? displayGold(totalGive) : "-"}</td>
+        <td>${totalGetFactor ? displayGold(totalGetFactor) : "-"}</td>
+        <td>${totalGiveFactor ? displayGold(totalGiveFactor) : "-"}</td>
         <td>${totalBalance ? displayGold(totalBalance) : "0"}</td>
       </tr>`;
     document.getElementById("shopDateRange").innerHTML = dateRange;
@@ -887,10 +872,10 @@ function showHistory(type, name) {
         <tr>
           <td>${i + 1}</td>
           <td>${formatDate(x.closeDate)}</td>
-          <td>${x.totalGive ? displayGold(x.totalGive) : "0"}</td>
-          <td>${x.totalGet ? displayGold(x.totalGet) : "0"}</td>
+          <td>${x.totalGive ? displayGold(x.totalGive) : "-"}</td>
+          <td>${x.totalGet ? displayGold(x.totalGet) : "-"}</td>
+          <td>${x.totalFactor ? displayGold(x.totalFactor) : "-"}</td>
           <td>${x.balance ? displayGold(x.balance) : "0"}</td>
-          <td>${x.totalFactor ? displayGold(x.totalFactor) : "0"}</td>
           <td><button class="res-btn2" onclick="workerView('${name}', ${i})">View</button></td>
         </tr>`;
     } else {
@@ -900,10 +885,10 @@ function showHistory(type, name) {
         <tr>
           <td>${i + 1}</td>
           <td>${formatDate(x.closeDate)}</td>
-          <td>${x.totalGet ? displayGold(x.totalGet) : "0"}</td>
-          <td>${x.totalGive ? displayGold(x.totalGive) : "0"}</td>
-          <td>${x.totalGetFactor ? displayGold(x.totalGetFactor) : "0"}</td>
-          <td>${x.totalGiveFactor ? displayGold(x.totalGiveFactor) : "0"}</td>
+          <td>${x.totalGet ? displayGold(x.totalGet) : "-"}</td>
+          <td>${x.totalGive ? displayGold(x.totalGive) : "-"}</td>
+          <td>${x.totalGetFactor ? displayGold(x.totalGetFactor) : "-"}</td>
+          <td>${x.totalGiveFactor ? displayGold(x.totalGiveFactor) : "-"}</td>
           <td>${x.balance ? displayGold(x.balance) : "0"}</td>
           <td><button class="res-btn2" onclick="shopView('${name}', ${i})">View</button></td>
         </tr>`;
@@ -911,27 +896,27 @@ function showHistory(type, name) {
   });
 
   const head = isWorker
-    ? `<th>No</th><th>ပိတ်ရက်</th><th>ပေး</th><th>အပ်</th><th>ကျန်</th><th>လျော့</th><th>Action</th>`
+    ? `<th>No</th><th>ပိတ်ရက်</th><th>ပေး</th><th>အပ်</th><th>လျော့</th><th>ကျန်</th><th>Action</th>`
     : `<th>No</th><th>ပိတ်ရက်</th><th>ရ</th><th>ပေး</th><th>ရလျော့</th><th>ပေးလျော့</th><th>ကျန်</th><th>Action</th>`;
 
   const foot = isWorker
     ? `<th colspan="2">စုစုပေါင်း</th>
-       <th>${totalGive ? displayGold(totalGive) : "0"}</th>
-       <th>${totalGet ? displayGold(totalGet) : "0"}</th>
+       <th>${totalGive ? displayGold(totalGive) : "-"}</th>
+       <th>${totalGet ? displayGold(totalGet) : "-"}</th>
+       <th>${totalFactor ? displayGold(totalFactor) : "-"}</th>
        <th>${totalBalance ? displayGold(totalBalance) : "0"}</th>
-       <th>${totalFactor ? displayGold(totalFactor) : "0"}</th>
        <th></th>`
     : `<th colspan="2">စုစုပေါင်း</th>
-       <th>${totalGet ? displayGold(totalGet) : "0"}</th>
-       <th>${totalGive ? displayGold(totalGive) : "0"}</th>
-       <th>${totalGetFactor ? displayGold(totalGetFactor) : "0"}</th>
-       <th>${totalGiveFactor ? displayGold(totalGiveFactor) : "0"}</th>
+       <th>${totalGet ? displayGold(totalGet) : "-"}</th>
+       <th>${totalGive ? displayGold(totalGive) : "-"}</th>
+       <th>${totalGetFactor ? displayGold(totalGetFactor) : "-"}</th>
+       <th>${totalGiveFactor ? displayGold(totalGiveFactor) : "-"}</th>
        <th>${totalBalance ? displayGold(totalBalance) : "0"}</th>
        <th></th>`;
 
   document.getElementById(isWorker ? "mainHWorkerTable" : "mainHShopTable").innerHTML = `
       <div class="second-nav">
-        <div onclick="reBack()" class="icon">🏠</div>
+        <div></div>
         <div style="text-align: center;">${name}</div>
         <div class="icon" onclick="${isWorker ? "WhBack()" : "ShBack()"}">⬅️</div>
       </div>
@@ -943,6 +928,7 @@ function showHistory(type, name) {
         </table>
     `;
 }
+
 
 function WorkerHistory(name) {
   showHistory("worker", name);
@@ -977,6 +963,7 @@ function WhBack() {
   document.querySelector(".h-w-table").classList.add("inactive");
   document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
 }
+
 function ShBack() {
   document.querySelector(".h-s-table").classList.add("inactive");
   document.querySelectorAll(".on-off-nav").forEach((nav) => nav.classList.remove("inactive"));
@@ -1018,7 +1005,7 @@ function finalResult() {
                 <td>${factor ? displayGold(factor) : "-"}</td>
                 <td>${getFactor ? displayGold(getFactor) : "-"}</td>
                 <td>${giveFactor ? displayGold(giveFactor) : "-"}</td>
-                <td>${item.balance ? displayGold(item.balance) : "-"}</td>
+                <td>${item.balance ? displayGold(item.balance) : "0"}</td>
             </tr>
             `;
 
@@ -1108,7 +1095,7 @@ function showOwn(index) {
   goldData.forEach((x) => (g += Number(x.own || 0)));
 
   html += `
-    <tr style="font-weight:bold;background:#ffeeba">
+    <tr style="font-weight:bold;background:#eeee;">
         <td colspan="2">စုစုပေါင်း</td>
         <td>${goldText(g)}</td>
         <td></td>
