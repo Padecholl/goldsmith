@@ -5,8 +5,9 @@
         box-sizing: border-box;
       }
 
-      #loginPage{
+#loginPage{
     display:flex;
+    flex-direction:column;
     justify-content:center;
     align-items:center;
     height:100vh;
@@ -94,13 +95,14 @@
       }
 
       .nav-menu li:hover {
-        color: red;
-        font-weight: bold;
+        background-color: gold;
+
+        
       }
 
       .nav-menu li.active {
-        font-weight: bold;
-        color: red;
+        color: #111;
+        background-color: gold;
       }
 
       .page {
@@ -123,18 +125,26 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    padding: 200px;
+    padding: 50px;
+    background-color: gold;
+    border: 1px solid #000000;
       }
 
 
       #name_list,
-      #shop_list,
-      #name_h_div,
-      #shop_h_div {
+      #shop_list {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
+      }
+      #name_h_div,
+      #shop_h_div {
+        width: 100%;
+        padding: 5px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 5px;
       }
 
       .name-div,
@@ -175,9 +185,8 @@
         align-items: center;
         width: 100%;
         align-items: center;
-        background-color: gold;
-        color: rgb(0, 0, 0);
-        /* border: 1px solid black; */
+            background: #111;
+            color: #FFD700;
       }
 
       .second-nav div{
@@ -275,6 +284,9 @@
       th {
         background: #eeee;
       }
+      tr:nth-child(even) {
+        background: #f2f2f2;
+      }
 
       .res-btn1 {
         padding: 5px 100px;
@@ -287,12 +299,7 @@
   margin: 10px;
 }
 
-/* .about{
-      position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-} */
+
 
       #mainHShopTable,
       #mainHWorkerTable {
