@@ -282,6 +282,29 @@ function goldText(g) {
         ${sign}${k}' ${p}'' ${y} ရွေး
     `;
 }
+function goldKPY(g) {
+  let sign = "";
+  if (g < 0) {
+    sign = "-";
+    g = Math.abs(g);
+  }
+  let k = Math.floor(g / K);
+  let r = g - k * K;
+  let p = Math.floor(r / (K / 16));
+  r -= p * (K / 16);
+  let y = Math.round(r / (K / 128));
+  if (y >= 8) {
+    y = 0;
+    p++;
+  }
+  if (p >= 16) {
+    p = 0;
+    k++;
+  }
+  return `
+        ${sign}${k}ကျပ် ${p}ပဲ ${y} ရွေး
+    `;
+}
 
 const isMobile = window.innerWidth < 768; // 📱 Mobile = gram, 💻 Desktop = goldText
 
@@ -290,6 +313,7 @@ function displayGold(value) {
   if (value === 0) return " ";
   return isMobile ? value.toFixed(2) + "g" : goldText(value);
 }
+
 
 function formatDate(dateStr) {
   let d = new Date(dateStr.replace(" ", "T"));
@@ -1033,6 +1057,20 @@ function finalResult() {
             <td>${displayGold(finalBalance)}</td>
         </tr>
     `;
+
+
+  document.getElementById("finalSummary").innerHTML = `
+        
+        <div><h3>စုစုပေါင်း</h3></div>
+        <div> <p>စိုက်ရွှေ :-</p> <p>${goldKPY(totalOwnGold)}</p></div>
+        <div> <p>ရရွှေ :-</p> <p>${goldKPY(totalGet)}</p></div>
+        <div> <p>ပေးရွှေ :-</p> <p>${goldKPY(totalGive)}</p></div>  
+        <div> <p>လျော့တွက် :-</p> <p>${goldKPY(totalFactor)}</p></div>  
+        <div> <p>ရလျော့ :-</p> <p>${goldKPY(totalGetFactor)}</p></div>
+        <div>  <p>ပေးလျော့ :-</p> <p>${goldKPY(totalGiveFactor)}</p></div>
+        <div> <p>ကျန်ရွှေ :-</p> <p>${goldKPY(finalBalance)}</p></div>
+
+      `;
 }
 
 /* ============ Own gold (ဖိုစိုက်ရွှေ) ============ */
